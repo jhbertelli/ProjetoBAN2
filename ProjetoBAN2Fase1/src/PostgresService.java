@@ -10,7 +10,7 @@ public class PostgresService {
     public PostgresService() {
         String driver = "org.postgresql.Driver";
         String user = "postgres";
-        String senha = "1234";
+        String senha = "udesc";
         String url = "jdbc:postgresql://localhost:5432/lojaMusica";
 
         try {
