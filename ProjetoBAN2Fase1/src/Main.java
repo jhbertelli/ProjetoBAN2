@@ -1,9 +1,9 @@
 import application.CategoriasController;
-//import application.VendedoresController;
+import application.VendedoresController;
 import infrastucture.CategoriasRepository;
 import infrastucture.Input;
 import infrastucture.PostgresService;
-//import infrastucture.VendedoresRepository;
+import infrastucture.VendedoresRepository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,8 +21,8 @@ public class Main {
         var categoriasRepository = new CategoriasRepository(connection);
         var categoriasController = new CategoriasController(categoriasRepository);
 
-//        var vendedoresRepository = new VendedoresRepository(connection);
-//        var vendedoresController = new VendedoresController(vendedoresRepository);
+        var vendedoresRepository = new VendedoresRepository(connection);
+        var vendedoresController = new VendedoresController(vendedoresRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenu();
@@ -43,18 +43,18 @@ public class Main {
                     case 4:
                         categoriasController.deleteCategoria();
                         break;
-//                    case 5:
-//                        vendedoresController.getAllVendedores();
-//                        break;
-//                    case 6:
-//                        vendedoresController.createVendedor();
-//                        break;
-//                    case 7:
-//                        vendedoresController.updateVendedor();
-//                        break;
-//                    case 8:
-//                        vendedoresController.deleteVendedor();
-//                        break;
+                    case 5:
+                        vendedoresController.getAllVendedores();
+                        break;
+                    case 6:
+                        vendedoresController.createVendedor();
+                        break;
+                    case 7:
+                        vendedoresController.updateVendedor();
+                        break;
+                    case 8:
+                        vendedoresController.deleteVendedor();
+                        break;
                     case QUIT_OPTION:
                         break;
                     default:
@@ -72,10 +72,10 @@ public class Main {
         System.out.println("2 - Adicionar categoria");
         System.out.println("3 - Atualizar categoria");
         System.out.println("4 - Excluir categoria");
-//        System.out.println("5 - Listar vendedores");
-//        System.out.println("6 - Adicionar vendedor");
-//        System.out.println("7 - Atualizar vendedor");
-//        System.out.println("8 - Excluir vendedor");
+        System.out.println("5 - Listar vendedores");
+        System.out.println("6 - Adicionar vendedor");
+        System.out.println("7 - Atualizar vendedor");
+        System.out.println("8 - Excluir vendedor");
 
         System.out.printf("%d - Sair\n", QUIT_OPTION);
         System.out.print("Escolha uma opção: ");
