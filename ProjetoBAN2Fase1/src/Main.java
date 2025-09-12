@@ -1,9 +1,7 @@
 import application.CategoriasController;
+import application.FornecedoresController;
 import application.VendedoresController;
-import infrastucture.CategoriasRepository;
-import infrastucture.Input;
-import infrastucture.PostgresService;
-import infrastucture.VendedoresRepository;
+import infrastucture.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,6 +21,9 @@ public class Main {
 
         var vendedoresRepository = new VendedoresRepository(connection);
         var vendedoresController = new VendedoresController(vendedoresRepository);
+
+        var fornecedoresRepository = new FornecedoresRepository(connection);
+        var fornecedoresController = new FornecedoresController(fornecedoresRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenu();
@@ -55,6 +56,15 @@ public class Main {
                     case 8:
                         vendedoresController.deleteVendedor();
                         break;
+                    case 9:
+                        fornecedoresController.createFornecedor();
+                        break;
+                    case 10:
+                        fornecedoresController.updateFornecedor();
+                        break;
+                    case 11:
+                        fornecedoresController.deleteFornecedor();
+                        break;
                     case QUIT_OPTION:
                         break;
                     default:
@@ -76,6 +86,9 @@ public class Main {
         System.out.println("6 - Adicionar vendedor");
         System.out.println("7 - Atualizar vendedor");
         System.out.println("8 - Excluir vendedor");
+        System.out.println("9 - Adicionar fornecedor");
+        System.out.println("10 - Atualizar fornecedor");
+        System.out.println("11 - Excluir fornecedor");
 
         System.out.printf("%d - Sair\n", QUIT_OPTION);
         System.out.print("Escolha uma opção: ");
