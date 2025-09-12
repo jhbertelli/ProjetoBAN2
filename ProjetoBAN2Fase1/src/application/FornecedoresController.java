@@ -3,7 +3,6 @@ package application;
 import domain.Fornecedor;
 import infrastucture.FornecedoresRepository;
 import infrastucture.Input;
-import infrastucture.VendedoresRepository;
 
 import java.sql.SQLException;
 
@@ -65,7 +64,7 @@ public class FornecedoresController {
         String documento = Input.getString("Insira o novo CNPJ do fornecedor:");
         String email = Input.getString("Insira o novo e-mail do fornecedor:");
 
-        var fornecedor = new Fornecedor(endereco, telefone, nome, nomeFantasia, documento, email);
+        var fornecedor = new Fornecedor(id, endereco, telefone, nome, nomeFantasia, documento, email);
 
         fornecedoresRepository.updateFornecedor(fornecedor);
     }
