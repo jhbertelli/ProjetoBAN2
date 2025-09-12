@@ -57,12 +57,15 @@ public class Main {
                         vendedoresController.deleteVendedor();
                         break;
                     case 9:
-                        fornecedoresController.createFornecedor();
+                        vendedoresController.getAllVendedores();
                         break;
                     case 10:
-                        fornecedoresController.updateFornecedor();
+                        fornecedoresController.createFornecedor();
                         break;
                     case 11:
+                        fornecedoresController.updateFornecedor();
+                        break;
+                    case 12:
                         fornecedoresController.deleteFornecedor();
                         break;
                     case QUIT_OPTION:
@@ -86,9 +89,10 @@ public class Main {
         System.out.println("6 - Adicionar vendedor");
         System.out.println("7 - Atualizar vendedor");
         System.out.println("8 - Excluir vendedor");
-        System.out.println("9 - Adicionar fornecedor");
-        System.out.println("10 - Atualizar fornecedor");
-        System.out.println("11 - Excluir fornecedor");
+        System.out.println("9 - Listar fornecedores");
+        System.out.println("10 - Adicionar fornecedor");
+        System.out.println("11 - Atualizar fornecedor");
+        System.out.println("12 - Excluir fornecedor");
 
         System.out.printf("%d - Sair\n", QUIT_OPTION);
         System.out.print("Escolha uma opção: ");

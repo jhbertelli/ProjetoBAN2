@@ -67,7 +67,7 @@ public class FornecedoresRepository {
 
     public void updateFornecedor(Fornecedor fornecedor) throws SQLException {
         PreparedStatement st = connection.prepareStatement(
-                "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=?"
+                "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=? WHERE id_fornecedor=?"
         );
 
         st.setString(1, fornecedor.getEndereco());
