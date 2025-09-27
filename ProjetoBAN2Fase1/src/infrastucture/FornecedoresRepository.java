@@ -14,7 +14,7 @@ public class FornecedoresRepository {
 
     public void createFornecedor(Fornecedor fornecedor) throws SQLException {
         PreparedStatement st = connection.prepareStatement(
-                "INSERT INTO fornecedores (endereco, telefone, nome, nome_fantasia, documento, email_contato) VALUES (?,?,?,?,?,?)"
+            "INSERT INTO fornecedores (endereco, telefone, nome, nome_fantasia, documento, email_contato) VALUES (?,?,?,?,?,?)"
         );
 
 
@@ -31,7 +31,7 @@ public class FornecedoresRepository {
 
     public void deleteFornecedor(int id) throws SQLException {
         PreparedStatement st = connection.prepareStatement(
-                "DELETE FROM fornecedores WHERE id_fornecedor = ?"
+            "DELETE FROM fornecedores WHERE id_fornecedor = ?"
         );
 
         st.setInt(1, id);
@@ -45,20 +45,20 @@ public class FornecedoresRepository {
         ArrayList<Fornecedor> fornecedores = new ArrayList<>();
 
         ResultSet result = st.executeQuery(
-                "SELECT * FROM fornecedores ORDER BY id_fornecedor"
+            "SELECT * FROM fornecedores ORDER BY id_fornecedor"
         );
 
         while (result.next()) {
             fornecedores.add(
-                    new Fornecedor(
-                            result.getInt(1),
-                            result.getString(2),
-                            result.getString(3),
-                            result.getString(4),
-                            result.getString(5),
-                            result.getString(6),
-                            result.getString(7)
-                    )
+                new Fornecedor(
+                    result.getInt(1),
+                    result.getString(2),
+                    result.getString(3),
+                    result.getString(4),
+                    result.getString(5),
+                    result.getString(6),
+                    result.getString(7)
+                )
             );
         }
 
@@ -67,7 +67,7 @@ public class FornecedoresRepository {
 
     public void updateFornecedor(Fornecedor fornecedor) throws SQLException {
         PreparedStatement st = connection.prepareStatement(
-                "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=? WHERE id_fornecedor=?"
+            "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=? WHERE id_fornecedor=?"
         );
 
         st.setString(1, fornecedor.getEndereco());
@@ -76,6 +76,7 @@ public class FornecedoresRepository {
         st.setString(4, fornecedor.getNomeFantasia());
         st.setString(5, fornecedor.getDocumento());
         st.setString(6, fornecedor.getEmail());
+        st.setInt(7, fornecedor.getId());
 
         st.execute();
         st.close();
