@@ -16,7 +16,7 @@ public class FornecedoresController {
     public void getAllFornecedores() throws SQLException {
         var fornecedores = fornecedoresRepository.getAllFornecedores();
 
-        System.out.println(("--- Listando Fornecedores ---"));
+        System.out.println(("---- Listando Fornecedores ----"));
 
         if (fornecedores.isEmpty()) {
             System.out.println("Nenhum fornecedor encontrado.");
@@ -25,7 +25,7 @@ public class FornecedoresController {
 
         for (var fornecedor : fornecedores) {
             System.out.printf(
-                "ID: %d - Nome: %s - Nome Fantasia: %s - Endereço: %s - Telefone %s - Documento: %s - Email: %s\n",
+                "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
                 fornecedor.getId(),
                 fornecedor.getNome(),
                 fornecedor.getNomeFantasia(),
@@ -38,7 +38,7 @@ public class FornecedoresController {
     }
 
     public void createFornecedor() throws SQLException {
-        System.out.println("--- Adicionando fornecedor ---");
+        System.out.println("---- Adicionando fornecedor ----");
 
         String nome = Input.getString("Insira o nome do fornecedor:");
         String nomeFantasia = Input.getString("Insira o nome fantasia do fornecedor:");
@@ -53,7 +53,7 @@ public class FornecedoresController {
     }
 
     public void updateFornecedor() throws SQLException {
-        System.out.println("--- Atualizando fornecedores ---");
+        System.out.println("---- Atualizando fornecedores ----");
 
         int id = Input.getInt("Insira o ID do fornecedor a atualizar:");
 
@@ -70,7 +70,7 @@ public class FornecedoresController {
     }
 
     public void deleteFornecedor() throws SQLException {
-        System.out.println("--- Excluindo fornecedor ---");
+        System.out.println("---- Excluindo fornecedor ----");
 
         int id = Input.getInt("Insira o ID do fornecedor a excluir:");
 

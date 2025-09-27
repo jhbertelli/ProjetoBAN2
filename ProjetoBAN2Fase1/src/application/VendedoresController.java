@@ -16,7 +16,7 @@ public class VendedoresController {
     public void getAllVendedores() throws SQLException {
         var vendedores = vendedoresRepository.getAllVendedores();
 
-        System.out.println("--- Listando vendedores ---");
+        System.out.println("---- Listando vendedores ----");
 
         if (vendedores.isEmpty()) {
             System.out.println("Nenhum vendedor encontrado.");
@@ -25,7 +25,7 @@ public class VendedoresController {
 
         for (var vendedor : vendedores) {
             System.out.printf(
-                "ID: %d - Nome: %s - Endereço: %s - Telefone: %s - E-mail: %s\n",
+                "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
                 vendedor.getId(),
                 vendedor.getNome(),
                 vendedor.getEndereco(),
@@ -36,7 +36,7 @@ public class VendedoresController {
     }
 
     public void createVendedor() throws SQLException {
-        System.out.println("--- Adicionando vendedor ---");
+        System.out.println("---- Adicionando vendedor ----");
 
         String nome = Input.getString("Insira o nome do vendedor:");
 
@@ -52,7 +52,7 @@ public class VendedoresController {
     }
 
     public void updateVendedor() throws SQLException {
-        System.out.println("--- Atualizando vendedores ---");
+        System.out.println("---- Atualizando vendedores ----");
 
         int id = Input.getInt("Insira o ID do vendedor a atualizar:");
 
@@ -70,7 +70,7 @@ public class VendedoresController {
     }
 
     public void deleteVendedor() throws SQLException {
-        System.out.println("--- Excluindo vendedor ---");
+        System.out.println("---- Excluindo vendedor ----");
 
         int id = Input.getInt("Insira o ID do vendedor a excluir:");
 

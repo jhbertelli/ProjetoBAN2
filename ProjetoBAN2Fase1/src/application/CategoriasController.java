@@ -16,7 +16,7 @@ public class CategoriasController {
     public void getAllCategorias() throws SQLException {
         var categorias = categoriasRepository.getAllCategorias();
 
-        System.out.println("--- Listando categorias ---");
+        System.out.println("---- Listando categorias ----");
 
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria encontrada.");
@@ -24,12 +24,12 @@ public class CategoriasController {
         }
 
         for (var categoria : categorias) {
-            System.out.printf("ID: %d - Nome: %s\n", categoria.getId(), categoria.getNome());
+            System.out.printf("ID: %d | Nome: %s\n", categoria.getId(), categoria.getNome());
         }
     }
 
     public void createCategoria() throws SQLException {
-        System.out.println("--- Adicionando categoria ---");
+        System.out.println("---- Adicionando categoria ----");
 
         String nome = Input.getString("Insira o nome da categoria:");
 
@@ -39,7 +39,7 @@ public class CategoriasController {
     }
 
     public void updateCategoria() throws SQLException {
-        System.out.println("--- Atualizando categorias ---");
+        System.out.println("---- Atualizando categorias ----");
 
         int id = Input.getInt("Insira o ID da categoria a atualizar:");
 
@@ -51,7 +51,7 @@ public class CategoriasController {
     }
 
     public void deleteCategoria() throws SQLException {
-        System.out.println("--- Excluindo categoria ---");
+        System.out.println("---- Excluindo categoria ----");
 
         int id = Input.getInt("Insira o ID da categoria a excluir:");
 
