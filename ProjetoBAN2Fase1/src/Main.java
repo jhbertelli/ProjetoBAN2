@@ -29,7 +29,7 @@ public class Main {
         var fornecedoresController = new FornecedoresController(fornecedoresRepository);
 
         var produtosRepository = new ProdutosRepository(connection);
-        var produtosController = new ProdutosController(produtosRepository);
+        var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenuPrincipal();

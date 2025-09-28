@@ -1,6 +1,8 @@
 package application;
 
 import domain.Produto;
+import infrastucture.CategoriasRepository;
+import infrastucture.FornecedoresRepository;
 import infrastucture.ProdutosRepository;
 import infrastucture.Input;
 
@@ -9,9 +11,13 @@ import java.sql.Date;
 
 public class ProdutosController {
     private final ProdutosRepository produtosRepository;
+    private final CategoriasRepository categoriasRepository;
+    private final FornecedoresRepository fornecedoresRepository;
 
-    public ProdutosController(ProdutosRepository produtosRepository) {
+    public ProdutosController(ProdutosRepository produtosRepository, CategoriasRepository categoriasRepository, FornecedoresRepository fornecedoresRepository) {
         this.produtosRepository = produtosRepository;
+        this.categoriasRepository = categoriasRepository;
+        this.fornecedoresRepository = fornecedoresRepository;
     }
 
     public void getAllProdutos() throws SQLException {
@@ -40,16 +46,46 @@ public class ProdutosController {
     public void createProduto() throws SQLException {
         System.out.println("---- Adicionando produto ----");
 
+        var categorias = categoriasRepository.getAllCategorias();
+
+        if (categorias.isEmpty()) {
+            System.out.println("Erro: nenhuma categoria encontrada! Para criar um produto, crie uma categoria primeiro.");
+            return;
+        }
+
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
+
+        if (fornecedores.isEmpty()) {
+            System.out.println("Erro: nenhum fornecedor encontrado! Para criar um produto, crie um fornecedor primeiro.");
+            return;
+        }
+
         String nome = Input.getString("Insira o nome do produto:");
         double preco = Input.getDouble("Insira o preço do produto:");
         int quantidade = Input.getInt("Insira a quantidade em estoque:");
         int tempoGarantia = Input.getInt("Insira o tempo de garantia (em meses):");
         Date dataRecebimento = Input.getDate("Insira a data de recebimento (formato YYYY-MM-DD):");
 
-        // TODO: verificar se categoria/fornecedor existe, ou se há categorias ou fornecedores
-        // a aplicação não está caindo, mas o registro não é salvo se continuar com categoria/fornecedor que não existe
-        int idCategoria = Input.getInt("Insira o ID da Categoria:");
-        int idFornecedor = Input.getInt("Insira o ID do Fornecedor:");
+        for (var categoria : categorias) {
+            System.out.printf("ID: %d | Nome: %s\n", categoria.getId(), categoria.getNome());
+        }
+
+        int idCategoria = Input.getInt("Insira o ID da categoria do produto:");
+
+        for (var fornecedor : fornecedores) {
+            System.out.printf(
+                "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
+                fornecedor.getId(),
+                fornecedor.getNome(),
+                fornecedor.getNomeFantasia(),
+                fornecedor.getEndereco(),
+                fornecedor.getTelefone(),
+                fornecedor.getDocumento(),
+                fornecedor.getEmail()
+            );
+        }
+
+        int idFornecedor = Input.getInt("Insira o ID do fornecedor do produto:");
 
         var produto = new Produto(nome, preco, tempoGarantia, dataRecebimento, quantidade);
         produto.setIdCategoria(idCategoria);
@@ -69,8 +105,8 @@ public class ProdutosController {
         int tempoGarantia = Input.getInt("Insira o novo tempo de garantia (em meses):");
         Date dataRecebimento = Input.getDate("Insira a nova data de recebimento (formato YYYY-MM-DD):");
 
-        // TODO: verificar se categoria/fornecedor existe, ou se há categorias ou fornecedores
-        // a aplicação não está caindo, mas o registro não é salvo se continuar com categoria/fornecedor que não existe
+        // aqui não precisa verificar se há categoria ou fornecedor porque
+        // nenhuma categoria ou fornecedor pode ser excluído/a se houver um produto atrelado
         int idCategoria = Input.getInt("Insira o novo ID da Categoria:");
         int idFornecedor = Input.getInt("Insira o novo ID do Fornecedor:");
 
