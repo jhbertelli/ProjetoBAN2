@@ -1,7 +1,5 @@
-import application.CategoriasController;
-import application.FornecedoresController;
-import application.ProdutosController;
-import application.VendedoresController;
+import application.*;
+import domain.Venda;
 import infrastucture.*;
 
 import java.sql.Connection;
@@ -12,9 +10,10 @@ public class Main {
     private static final int FORNECEDORES_OPTION = 2;
     private static final int VENDEDORES_OPTION = 3;
     private static final int PRODUTOS_OPTION = 4;
-    private static final int QUIT_OPTION = 5;
+    private static final int VENDAS_OPTION = 5;
+    private static final int QUIT_OPTION = 6;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Connection connection = new PostgresService().getConnection();
 
         int opcao = 0;
@@ -30,6 +29,9 @@ public class Main {
 
         var produtosRepository = new ProdutosRepository(connection);
         var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
+
+        var vendasRepository = new VendasRepository(connection);
+        var vendasController = new VendasController(vendasRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenuPrincipal();
@@ -49,6 +51,9 @@ public class Main {
                         break;
                     case PRODUTOS_OPTION:
                         gerenciarProdutos(produtosController);
+                        break;
+                    case VENDAS_OPTION:
+                        gerenciarVendas(vendasController);
                         break;
                     case QUIT_OPTION:
                         break;
@@ -178,12 +183,42 @@ public class Main {
         }
     }
 
+    private static void gerenciarVendas(VendasController vendasController) throws SQLException {
+        int opcao = 0;
+        final int opcao_voltar = 5;
+
+        while (opcao != opcao_voltar) {
+            exibirMenuCrud("venda", "vendas");
+            opcao = Input.getInt();
+
+            switch (opcao) {
+                case 1:
+                    System.out.println("Operação não implementada");
+                    break;
+                case 2:
+                    vendasController.createVenda();
+                    break;
+                case 3:
+                    System.out.println("Operação não implementada");
+                    break;
+                case 4:
+                    System.out.println("Operação não implementada");
+                    break;
+                case opcao_voltar:
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+    }
+
     private static void exibirMenuPrincipal() {
         System.out.println("---- Menu principal ----");
         System.out.printf("%d - Gerenciar categorias%n", CATEGORIAS_OPTION);
         System.out.printf("%d - Gerenciar fornecedores%n", FORNECEDORES_OPTION);
         System.out.printf("%d - Gerenciar vendedores%n", VENDEDORES_OPTION);
         System.out.printf("%d - Gerenciar produtos%n", PRODUTOS_OPTION);
+        System.out.printf("%d - Gerenciar vendas%n", VENDAS_OPTION);
         System.out.printf("%d - Sair do sistema%n", QUIT_OPTION);
         System.out.print("Escolha uma opção: ");
     }
