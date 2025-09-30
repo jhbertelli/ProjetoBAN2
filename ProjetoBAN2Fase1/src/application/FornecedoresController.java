@@ -24,16 +24,7 @@ public class FornecedoresController {
         }
 
         for (var fornecedor : fornecedores) {
-            System.out.printf(
-                "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
-                fornecedor.getId(),
-                fornecedor.getNome(),
-                fornecedor.getNomeFantasia(),
-                fornecedor.getEndereco(),
-                fornecedor.getTelefone(),
-                fornecedor.getDocumento(),
-                fornecedor.getEmail()
-            );
+            System.out.printf(fornecedor.toString());
         }
     }
 

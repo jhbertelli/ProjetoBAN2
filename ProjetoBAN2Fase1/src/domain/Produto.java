@@ -88,4 +88,17 @@ public class Produto {
     public void decrementarQuantidade() {
         quantidade--;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "ID: %d | Nome: %s | Preço: R$%.2f | Quantidade: %d | Tempo de Garantia: %d meses | Data de Recebimento: %s\n",
+            id,
+            nome,
+            preco,
+            quantidade,
+            tempoGarantia,
+            dataRecebimento
+        );
+    }
 }

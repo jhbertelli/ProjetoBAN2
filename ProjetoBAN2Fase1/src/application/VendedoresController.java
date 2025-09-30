@@ -24,14 +24,7 @@ public class VendedoresController {
         }
 
         for (var vendedor : vendedores) {
-            System.out.printf(
-                "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
-                vendedor.getId(),
-                vendedor.getNome(),
-                vendedor.getEndereco(),
-                vendedor.getTelefone(),
-                vendedor.getEmail()
-            );
+            System.out.printf(vendedor.toString());
         }
     }
 

@@ -54,4 +54,16 @@ public class Vendedor {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
+            id,
+            nome,
+            endereco,
+            telefone,
+            email
+        );
+    }
 }

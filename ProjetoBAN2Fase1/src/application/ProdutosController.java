@@ -31,15 +31,7 @@ public class ProdutosController {
         }
 
         for (var produto : produtos) {
-            System.out.printf(
-                "ID: %d | Nome: %s | Preço: R$%.2f | Quantidade: %d | Tempo de Garantia: %d meses | Data de Recebimento: %s\n",
-                produto.getId(),
-                produto.getNome(),
-                produto.getPreco(),
-                produto.getQuantidade(),
-                produto.getTempoGarantia(),
-                produto.getDataRecebimento()
-            );
+            System.out.printf(produto.toString());
         }
     }
 
@@ -67,22 +59,13 @@ public class ProdutosController {
         Date dataRecebimento = Input.getDate("Insira a data de recebimento (formato YYYY-MM-DD):");
 
         for (var categoria : categorias) {
-            System.out.printf("ID: %d | Nome: %s\n", categoria.getId(), categoria.getNome());
+            System.out.printf(categoria.toString());
         }
 
         int idCategoria = Input.getInt("Insira o ID da categoria do produto:");
 
         for (var fornecedor : fornecedores) {
-            System.out.printf(
-                "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
-                fornecedor.getId(),
-                fornecedor.getNome(),
-                fornecedor.getNomeFantasia(),
-                fornecedor.getEndereco(),
-                fornecedor.getTelefone(),
-                fornecedor.getDocumento(),
-                fornecedor.getEmail()
-            );
+            System.out.printf(fornecedor.toString());
         }
 
         int idFornecedor = Input.getInt("Insira o ID do fornecedor do produto:");

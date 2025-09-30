@@ -77,4 +77,17 @@ public class Fornecedor {
         this.documento = documento;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+            "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
+            id,
+            nome,
+            nomeFantasia,
+            endereco,
+            telefone,
+            documento,
+            emailContato
+        );
+    }
 }

@@ -24,7 +24,7 @@ public class CategoriasController {
         }
 
         for (var categoria : categorias) {
-            System.out.printf("ID: %d | Nome: %s\n", categoria.getId(), categoria.getNome());
+            System.out.printf(categoria.toString());
         }
     }
 
