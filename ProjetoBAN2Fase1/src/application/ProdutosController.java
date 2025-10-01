@@ -62,17 +62,45 @@ public class ProdutosController {
             System.out.printf(categoria.toString());
         }
 
-        int idCategoria = Input.getInt("Insira o ID da categoria do produto:");
+        var produto = new Produto(nome, preco, tempoGarantia, dataRecebimento, quantidade);
+
+        while (true) {
+            int idCategoria = Input.getInt("Insira o ID da categoria do produto:");
+
+            var categoria = categorias.stream()
+                    .filter(x -> x.getId()==idCategoria)
+                    .findFirst()
+                    .orElse(null);
+
+            if (categoria == null) {
+                System.out.println("Categoria " + idCategoria + " não encontrada, tente outra.");
+                continue;
+            }
+            produto.setIdCategoria(idCategoria);
+
+            break;
+        }
 
         for (var fornecedor : fornecedores) {
             System.out.printf(fornecedor.toString());
         }
 
-        int idFornecedor = Input.getInt("Insira o ID do fornecedor do produto:");
+        while (true) {
+            int idFornecedor = Input.getInt("Insira o ID do fornecedor do produto:");
 
-        var produto = new Produto(nome, preco, tempoGarantia, dataRecebimento, quantidade);
-        produto.setIdCategoria(idCategoria);
-        produto.setIdFornecedor(idFornecedor);
+            var fornecedor = fornecedores.stream()
+                    .filter(x -> x.getId()==idFornecedor)
+                    .findFirst()
+                    .orElse(null);
+
+            if (fornecedor == null) {
+                System.out.println("Fornecedor " + idFornecedor + " não encontrado, tente outro.");
+                continue;
+            }
+            produto.setIdFornecedor(idFornecedor);
+
+            break;
+        }
 
         produtosRepository.createProduto(produto);
     }
