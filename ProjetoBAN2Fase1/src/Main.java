@@ -31,7 +31,7 @@ public class Main {
         var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
 
         var vendasRepository = new VendasRepository(connection);
-        var vendasController = new VendasController(vendasRepository);
+        var vendasController = new VendasController(vendasRepository, produtosRepository, vendedoresRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenuPrincipal();

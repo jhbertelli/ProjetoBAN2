@@ -117,4 +117,16 @@ public class ProdutosRepository {
         st.execute();
         st.close();
     }
+
+    public void decrementarQuantidade(int id, int quantidade) throws SQLException {
+        PreparedStatement st = connection.prepareStatement(
+            "UPDATE produtos SET quantidade = quantidade - ? WHERE id_produto=?"
+        );
+
+        st.setInt(1, quantidade);
+        st.setInt(2, id);
+
+        st.execute();
+        st.close();
+    }
 }

@@ -7,6 +7,10 @@ public class Vendedor {
     private String telefone;
     private String email;
 
+    public Vendedor(int id) {
+        this.id = id;
+    }
+
     public Vendedor(String nome, String endereco, String telefone, String email) {
         this(0, nome, endereco, telefone, email);
     }

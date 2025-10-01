@@ -1,16 +1,24 @@
 package application;
 
 import domain.Venda;
+import domain.Vendedor;
 import infrastucture.Input;
+import infrastucture.ProdutosRepository;
 import infrastucture.VendasRepository;
+import infrastucture.VendedoresRepository;
 
 import java.sql.SQLException;
+import java.util.stream.Collectors;
 
 public class VendasController {
     private final VendasRepository vendasRepository;
+    private final ProdutosRepository produtosRepository;
+    private final VendedoresRepository vendedoresRepository;
 
-    public VendasController(VendasRepository vendasRepository) {
+    public VendasController(VendasRepository vendasRepository, ProdutosRepository produtosRepository, VendedoresRepository vendedoresRepository) {
         this.vendasRepository = vendasRepository;
+        this.produtosRepository = produtosRepository;
+        this.vendedoresRepository = vendedoresRepository;
     }
 
 //    public void getAllVendas() throws SQLException {
@@ -40,23 +48,99 @@ public class VendasController {
 //    }
 
     public void createVenda() throws SQLException {
+        var produtos = produtosRepository.getAllProdutos();
+
+        if (produtos.isEmpty()) {
+            System.out.println("Erro: nenhum produto encontrado! Para criar uma venda, crie um produto primeiro.");
+            return;
+        }
+
         System.out.println("---- Adicionando venda ----");
 
-        Integer idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
-        if (idVendedor == 0) idVendedor = null;
+        var vendedores = vendedoresRepository.getAllVendedores();
+
+        int idVendedor = 0;
+
+        if (!vendedores.isEmpty()) {
+            for (var vendedor : vendedores) {
+                System.out.println(vendedor.toString());
+            }
+
+            idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+
+            while (idVendedor > 0) {
+                int finalIdVendedor = idVendedor;
+
+                var vendedorEncontrado = vendedores
+                    .stream()
+                    .anyMatch(x -> x.getId() == finalIdVendedor);
+
+                if (!vendedorEncontrado) {
+                    idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+                } else {
+                    break;
+                }
+            }
+        } else {
+            System.out.println("Nenhum vendedor encontrado, prosseguindo para adição de produtos na venda");
+        }
+
+        Vendedor vendedor = idVendedor > 0 ? new Vendedor(idVendedor) : null;
 
         int ultimoIdVenda = vendasRepository.getUltimoIdVenda();
 
         var venda = new Venda(ultimoIdVenda);
-        venda.setIdVendedor(idVendedor);
+        venda.setVendedor(vendedor);
 
-        int qtdProdutos = Input.getInt("Quantos registros de produto você deseja adicionar para esta venda?");
+        for (var produto : produtos) {
+            System.out.println(produto.toString());
+        }
 
-        for (int i = 0; i < qtdProdutos; i++) {
-            int idProduto = Input.getInt("Insira o ID do produto:");
-            int quantidade = Input.getInt("Insira a quantidade vendida:");
+        while (true) {
+            int idProduto = Input.getInt("Insira o ID do produto a ser adicionado ou 0 para finalizar a adição de produtos:");
 
+            if (idProduto == 0) {
+                if (venda.getVendaProdutos().isEmpty()) {
+                    System.out.println("Ao menos um produto deve ser atrelado a uma venda. Tente novamente.");
+                    continue;
+                }
+
+                break;
+            }
+
+            var produto = produtos.stream()
+                .filter(x -> x.getId() == idProduto)
+                .findFirst()
+                .orElse(null);
+
+            if (produto == null) {
+                System.out.println("O produto com o ID " + idProduto + " não foi encontrado, tente outro.");
+                continue;
+            }
+
+            var produtosAdicionados = venda.getVendaProdutos()
+                .stream()
+                .filter(x -> x.getIdProduto() == idProduto)
+                .toList();
+
+            int produtoQuantidadeTotalVendidos = 0;
+
+            for (var vendaProduto : produtosAdicionados)
+                produtoQuantidadeTotalVendidos += vendaProduto.getQuantidadeVendida();
+
+            int produtoQuantidadeTotalDisponivel = produto.getQuantidade() - produtoQuantidadeTotalVendidos;
+
+            int quantidade = Input.getInt("Insira a quantidade vendida, ou 0 para não adicionar este produto:");
+
+            while (quantidade > produtoQuantidadeTotalDisponivel) {
+                quantidade = Input.getInt("A quantidade inserida é maior que a quantidade existente no estoque. Insira uma quantidade menor, ou 0 para não adicionar este produto:");
+            }
+
+            if (quantidade == 0) continue;
+
+            produtosRepository.decrementarQuantidade(idProduto, quantidade);
             venda.adicionarProduto(idProduto, quantidade);
+            System.out.println("Produto " + idProduto + " adicionado com a quantidade: " + quantidade);
         }
 
         vendasRepository.createVenda(venda);

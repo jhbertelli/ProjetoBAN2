@@ -15,10 +15,10 @@ public class VendasRepository {
     public void createVenda(Venda venda) throws SQLException {
         PreparedStatement st = connection.prepareStatement("INSERT INTO vendas (id_vendedor) VALUES (?)");
 
-        if (venda.getIdVendedor() == null)
+        if (venda.getVendedor() == null)
             st.setNull(1, Types.INTEGER);
         else
-            st.setInt(1, venda.getIdVendedor());
+            st.setInt(1, venda.getVendedor().getId());
 
         st.execute();
 
