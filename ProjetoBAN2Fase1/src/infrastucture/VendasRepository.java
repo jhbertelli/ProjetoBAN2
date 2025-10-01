@@ -6,6 +6,7 @@ import domain.Vendedor;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VendasRepository {
     private final Connection connection;
@@ -110,6 +111,64 @@ public class VendasRepository {
 
         return vendas;
     }
+
+//    public List<Venda> relatorioVendas(int idVendedor) throws SQLException {
+//
+//        PreparedStatement ps = connection.prepareStatement(sql);
+//
+//    }
+
+    public ArrayList<Venda> getRelatorioVendas(int id) throws SQLException {
+        String sql ="SELECT " +
+                    "ve.id_vendedor, " +
+                    "ve.nome AS vendedor, " +
+                    "v.id_venda, " +
+                    "p.id_produto, " +
+                    "p.nome AS produto, " +
+                    "vp.quantidade_vendida, " +
+                    "p.preco " +
+                    "FROM vendas v " +
+                    "JOIN vendedores ve ON v.id_vendedor = ve.id_vendedor " +
+                    "JOIN venda_produto vp ON v.id_venda = vp.id_venda " +
+                    "JOIN produtos p ON vp.id_produto = p.id_produto " +
+                    "WHERE v.id_vendedor = ? " +
+                    "ORDER BY v.id_venda";
+
+        ArrayList<Venda> relatorioFinal = new ArrayList<>();
+        Venda vendaAtual = null;
+
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, id);
+
+        ResultSet result = st.executeQuery();
+        while (result.next()) {
+            int idVendaDaLinha = result.getInt("id_venda");
+
+            if(vendaAtual == null || vendaAtual.getId() != idVendaDaLinha) {
+                vendaAtual = new Venda(idVendaDaLinha);
+
+                int idVendedor = result.getInt("id_vendedor");
+                String nomeVendedor = result.getString("vendedor");
+                vendaAtual.setVendedor(new Vendedor(idVendedor, nomeVendedor, null, null, null));
+
+                relatorioFinal.add(vendaAtual);
+            }
+
+            int idProduto = result.getInt("id_produto");
+            String nomeProduto = result.getString("produto");
+            double precoProduto = result.getDouble("preco");
+            int quantidadeVendida = result.getInt("quantidade_vendida");
+
+            Produto produto = new Produto(idProduto, nomeProduto, precoProduto, 0, null, 0);
+
+            vendaAtual.adicionarProduto(produto, quantidadeVendida);
+        }
+
+
+        return  relatorioFinal;
+    }
+
+
 //
 //    public void updateVenda(Venda produto) throws SQLException {
 //        PreparedStatement st = connection.prepareStatement(

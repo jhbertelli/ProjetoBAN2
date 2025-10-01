@@ -7,7 +7,11 @@ import infrastucture.ProdutosRepository;
 import infrastucture.VendasRepository;
 import infrastucture.VendedoresRepository;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VendasController {
     private final VendasRepository vendasRepository;
@@ -136,6 +140,63 @@ public class VendasController {
 
         vendasRepository.createVenda(venda);
     }
+
+//    public void vendasPorVendedor() throws SQLException {
+//        var vendedores = vendedoresRepository.getAllVendedores();
+//
+//        System.out.println("---- Informe o Vendedor ----");
+//
+//
+//
+//
+//    }
+
+    public void getRelatorioVendas() throws SQLException {
+        System.out.println("---- Relatório de vendas por vendedor ----");
+
+        var vendedores = vendedoresRepository.getAllVendedores();
+        if (vendedores.isEmpty()) {
+            System.out.println("Nenhum vendedor cadastrado. Impossível gerar relatório.");
+            return;
+        }
+
+        System.out.println("Vendedores disponíveis:\n");
+        for (var vendedor : vendedores) {
+            System.out.println(vendedor.toString());
+        }
+
+        int idVendedor = Input.getInt("Insira o id do vendedor a ser consultado:");
+        Vendedor vendedorSelecionado = vendedores.stream()
+                .filter(v -> v.getId() == idVendedor)
+                .findFirst()
+                .orElse(null);
+
+        if (vendedorSelecionado == null) {
+            System.out.println("Erro: Vendedor com ID " + idVendedor + " não encontrado.");
+            return;
+        }
+
+
+        var vendasDoVendedor = vendasRepository.getRelatorioVendas(idVendedor);
+
+        System.out.println("---- Listando vendas de " + vendedorSelecionado.getNome() + " ----");
+
+        if (vendasDoVendedor.isEmpty()) {
+            System.out.println("Nenhuma venda encontrada para este vendedor.");
+        } else {
+            for (var venda : vendasDoVendedor) {
+                System.out.println(venda.toString());
+            }
+        }
+        System.out.println("---- Fim do Relatório ----");
+
+    }
+
+//
+//    public void vendasPorCategoria() throws SQLException {
+//
+//    }
+
 
 //    public void updateVenda() throws SQLException {
 //        System.out.println("---- Atualizando vendas ----");
