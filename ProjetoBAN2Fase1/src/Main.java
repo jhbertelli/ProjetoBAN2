@@ -1,8 +1,11 @@
 import application.*;
+import domain.Produto;
 import domain.Venda;
 import infrastucture.*;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {
@@ -193,7 +196,7 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    System.out.println("Operação não implementada");
+                    vendasController.getAllVendas();
                     break;
                 case 2:
                     vendasController.createVenda();

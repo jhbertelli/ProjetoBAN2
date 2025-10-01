@@ -24,7 +24,7 @@ public class VendedoresController {
         }
 
         for (var vendedor : vendedores) {
-            System.out.printf(vendedor.toString());
+            System.out.println(vendedor.toString());
         }
     }
 

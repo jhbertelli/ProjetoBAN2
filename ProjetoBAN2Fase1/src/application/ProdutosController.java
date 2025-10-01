@@ -31,7 +31,7 @@ public class ProdutosController {
         }
 
         for (var produto : produtos) {
-            System.out.printf(produto.toString());
+            System.out.println(produto.toString());
         }
     }
 
@@ -59,7 +59,7 @@ public class ProdutosController {
         Date dataRecebimento = Input.getDate("Insira a data de recebimento (formato YYYY-MM-DD):");
 
         for (var categoria : categorias) {
-            System.out.printf(categoria.toString());
+            System.out.println(categoria.toString());
         }
 
         var produto = new Produto(nome, preco, tempoGarantia, dataRecebimento, quantidade);
@@ -82,7 +82,7 @@ public class ProdutosController {
         }
 
         for (var fornecedor : fornecedores) {
-            System.out.printf(fornecedor.toString());
+            System.out.println(fornecedor.toString());
         }
 
         while (true) {

@@ -8,7 +8,6 @@ import infrastucture.VendasRepository;
 import infrastucture.VendedoresRepository;
 
 import java.sql.SQLException;
-import java.util.stream.Collectors;
 
 public class VendasController {
     private final VendasRepository vendasRepository;
@@ -21,31 +20,20 @@ public class VendasController {
         this.vendedoresRepository = vendedoresRepository;
     }
 
-//    public void getAllVendas() throws SQLException {
-//        var vendas = vendasRepository.getAllVendas();
-//
-//        System.out.println("---- Listando vendas ----");
-//
-//        if (vendas.isEmpty()) {
-//            System.out.println("Nenhuma venda encontrada.");
-//            return;
-//        }
-//
-//        for (var venda : vendas) {
-//           System.out.printf(categoria.toString());
-//        }
-//
-//        for (var venda : vendas) {
-//            System.out.printf(
-//                "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
-//                venda.getId(),
-//                venda.getNome(),
-//                venda.getEndereco(),
-//                venda.getTelefone(),
-//                venda.getEmail()
-//            );
-//        }
-//    }
+    public void getAllVendas() throws SQLException {
+        var vendas = vendasRepository.getAllVendas();
+
+        System.out.println("---- Listando vendas ----");
+
+        if (vendas.isEmpty()) {
+            System.out.println("Nenhuma venda encontrada.");
+            return;
+        }
+
+        for (var venda : vendas) {
+            System.out.println(venda.toString());
+        }
+    }
 
     public void createVenda() throws SQLException {
         var produtos = produtosRepository.getAllProdutos();
@@ -62,6 +50,8 @@ public class VendasController {
         int idVendedor = 0;
 
         if (!vendedores.isEmpty()) {
+            System.out.println("Listando vendedores:");
+
             for (var vendedor : vendedores) {
                 System.out.println(vendedor.toString());
             }
@@ -87,11 +77,12 @@ public class VendasController {
 
         Vendedor vendedor = idVendedor > 0 ? new Vendedor(idVendedor) : null;
 
-        int ultimoIdVenda = vendasRepository.getUltimoIdVenda();
+        int proximoIdVenda = vendasRepository.getProximoIdVenda();
 
-        var venda = new Venda(ultimoIdVenda);
+        var venda = new Venda(proximoIdVenda);
         venda.setVendedor(vendedor);
 
+        System.out.println("Listando produtos:");
         for (var produto : produtos) {
             System.out.println(produto.toString());
         }
@@ -120,7 +111,7 @@ public class VendasController {
 
             var produtosAdicionados = venda.getVendaProdutos()
                 .stream()
-                .filter(x -> x.getIdProduto() == idProduto)
+                .filter(x -> x.getProduto().getId() == idProduto)
                 .toList();
 
             int produtoQuantidadeTotalVendidos = 0;
@@ -139,7 +130,7 @@ public class VendasController {
             if (quantidade == 0) continue;
 
             produtosRepository.decrementarQuantidade(idProduto, quantidade);
-            venda.adicionarProduto(idProduto, quantidade);
+            venda.adicionarProduto(produto, quantidade);
             System.out.println("Produto " + idProduto + " adicionado com a quantidade: " + quantidade);
         }
 

@@ -27,6 +27,6 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return String.format("ID: %d | Nome: %s\n", id, nome);
+        return String.format("ID: %d | Nome: %s", id, nome);
     }
 }

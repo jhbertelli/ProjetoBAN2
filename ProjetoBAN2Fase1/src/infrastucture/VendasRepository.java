@@ -1,6 +1,8 @@
 package infrastucture;
 
+import domain.Produto;
 import domain.Venda;
+import domain.Vendedor;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class VendasRepository {
                 "INSERT INTO venda_produto (id_produto, id_venda, quantidade_vendida) VALUES (?,?,?)"
             );
 
-            st.setInt(1, vendaProduto.getIdProduto());
+            st.setInt(1, vendaProduto.getProduto().getId());
             st.setInt(2, vendaProduto.getIdVenda());
             st.setInt(3, vendaProduto.getQuantidadeVendida());
 
@@ -37,7 +39,7 @@ public class VendasRepository {
         st.execute();
     }
 
-    public int getUltimoIdVenda() throws SQLException {
+    public int getProximoIdVenda() throws SQLException {
         var statement = connection.createStatement();
 
         var result = statement
@@ -66,29 +68,48 @@ public class VendasRepository {
         return proximoId;
     }
 
-//    public ArrayList<Venda> getAllVendas() throws SQLException {
-//        Statement st = connection.createStatement();
-//        ArrayList<Venda> produtos = new ArrayList<>();
-//
-//        ResultSet result = st.executeQuery(
-//            "SELECT id_produto, nome, preco, tempo_garantia, data_recebimento, quantidade FROM produtos ORDER BY id_produto"
-//        );
-//
-//        while (result.next()) {
-//            produtos.add(
-//                new Venda(
-//                    result.getInt(1),
-//                    result.getString(2),
-//                    result.getDouble(3),
-//                    result.getInt(4),
-//                    result.getDate(5),
-//                    result.getInt(6)
-//                )
-//            );
-//        }
-//
-//        return produtos;
-//    }
+    public ArrayList<Venda> getAllVendas() throws SQLException {
+        Statement st = connection.createStatement();
+        ArrayList<Venda> vendas = new ArrayList<>();
+
+        ResultSet result = st.executeQuery(
+            "SELECT id_venda, vendedores.nome FROM vendas LEFT JOIN vendedores ON vendas.id_vendedor = vendedores.id_vendedor ORDER BY id_venda"
+        );
+
+        while (result.next()) {
+            var venda = new Venda(result.getInt(1));
+
+            System.out.println("venda: " + venda.getId());
+            var nomeVendedor = result.getString(2);
+
+            if (nomeVendedor != null) {
+                var vendedor = new Vendedor();
+                vendedor.setNome(nomeVendedor);
+                venda.setVendedor(vendedor);
+            }
+
+            PreparedStatement stVendaProduto = connection.prepareStatement(
+                "SELECT vp.quantidade_vendida, p.nome, p.preco FROM venda_produto vp JOIN produtos p ON vp.id_produto = p.id_produto WHERE id_venda = ?"
+            );
+
+            stVendaProduto.setInt(1, venda.getId());
+            ResultSet resultVendaProduto = stVendaProduto.executeQuery();
+
+            while (resultVendaProduto.next()) {
+                int quantidadeVendida = resultVendaProduto.getInt(1);
+                var produto = new Produto();
+                produto.setNome(resultVendaProduto.getString(2));
+                produto.setPreco(resultVendaProduto.getInt(3));
+
+                venda.adicionarProduto(produto, quantidadeVendida);
+            }
+
+            vendas.add(venda);
+            stVendaProduto.close();
+        }
+
+        return vendas;
+    }
 //
 //    public void updateVenda(Venda produto) throws SQLException {
 //        PreparedStatement st = connection.prepareStatement(

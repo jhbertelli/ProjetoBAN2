@@ -24,7 +24,7 @@ public class FornecedoresController {
         }
 
         for (var fornecedor : fornecedores) {
-            System.out.printf(fornecedor.toString());
+            System.out.println(fornecedor.toString());
         }
     }
 

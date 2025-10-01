@@ -24,7 +24,7 @@ public class CategoriasController {
         }
 
         for (var categoria : categorias) {
-            System.out.printf(categoria.toString());
+            System.out.println(categoria.toString());
         }
     }
 

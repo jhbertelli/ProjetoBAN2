@@ -7,6 +7,10 @@ public class Vendedor {
     private String telefone;
     private String email;
 
+    public Vendedor() {
+        this.id = 0;
+    }
+
     public Vendedor(int id) {
         this.id = id;
     }
@@ -62,7 +66,7 @@ public class Vendedor {
     @Override
     public String toString() {
         return String.format(
-            "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
+            "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s",
             id,
             nome,
             endereco,

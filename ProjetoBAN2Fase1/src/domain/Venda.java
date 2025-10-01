@@ -11,12 +11,16 @@ public class Venda {
         this.id = id;
     }
 
-    public ArrayList<VendaProduto> getVendaProdutos() {
-        return vendaProdutos;
+    public void adicionarProduto(Produto produto, int quantidade) {
+        vendaProdutos.add(new VendaProduto(this.id, produto, quantidade));
     }
 
-    public void adicionarProduto(int idProduto, int quantidade) {
-        vendaProdutos.add(new VendaProduto(this.id, idProduto, quantidade));
+    public int getId() {
+        return id;
+    }
+
+    public ArrayList<VendaProduto> getVendaProdutos() {
+        return vendaProdutos;
     }
 
     public Vendedor getVendedor() {
@@ -25,5 +29,36 @@ public class Venda {
 
     public void setVendedor(Vendedor vendedor) {
         this.vendedor = vendedor;
+    }
+
+    @Override
+    public String toString() {
+        var stringBuilder = new StringBuilder();
+
+        stringBuilder.append(
+            String.format(
+                "ID: %d | Vendedor: %s | Produtos vendidos: ",
+                id,
+                vendedor == null ? "Nenhum" : vendedor.getNome()
+            )
+        );
+
+        double valorTotal = 0.0;
+
+        for (var vendaProduto : vendaProdutos) {
+            stringBuilder.append(
+                String.format(
+                    "%s (R$%.2f) (x%d) ",
+                    vendaProduto.getProduto().getNome(),
+                    vendaProduto.getProduto().getPreco(),
+                    vendaProduto.getQuantidadeVendida()
+                )
+            );
+            valorTotal += vendaProduto.getProduto().getPreco() * vendaProduto.getQuantidadeVendida();
+        }
+
+        stringBuilder.append(String.format( "| Lucro total: R$ %.2f", valorTotal));
+
+        return stringBuilder.toString();
     }
 }

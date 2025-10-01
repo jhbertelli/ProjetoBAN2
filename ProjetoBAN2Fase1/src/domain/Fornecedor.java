@@ -85,7 +85,7 @@ public class Fornecedor {
     @Override
     public String toString() {
         return String.format(
-            "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s\n",
+            "ID: %d | Nome: %s | Nome Fantasia: %s | Endereço: %s | Telefone %s | Documento: %s | Email: %s",
             id,
             nome,
             nomeFantasia,
