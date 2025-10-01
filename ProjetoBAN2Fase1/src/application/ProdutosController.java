@@ -1,5 +1,6 @@
 package application;
 
+import domain.Fornecedor;
 import domain.Produto;
 import infrastucture.CategoriasRepository;
 import infrastucture.FornecedoresRepository;
@@ -171,4 +172,45 @@ public class ProdutosController {
             System.out.println("Produto " + input + " não encontrado, tente outro.");
         }
     }
+
+    public void getRelatorioProdutosFornecedor() throws SQLException {
+        System.out.println("---- Relatório de Produtos por Fornecedor ----");
+
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
+        if (fornecedores.isEmpty()) {
+            System.out.println("Nenhum fornecedor cadastrado. Impossível gerar relatório.");
+            return;
+        }
+
+        System.out.println("Fornecedores disponíveis:\n");
+        for (var fornecedor : fornecedores) {
+            System.out.println(fornecedor.toString());
+        }
+
+        int idFornecedor = Input.getInt("Insira o id do fornecedor a ser consultado:");
+        Fornecedor fornecedorSelecionado = fornecedores.stream()
+                .filter(x -> x.getId() == idFornecedor)
+                .findFirst()
+                .orElse(null);
+
+        if (fornecedorSelecionado == null) {
+            System.out.println("Erro: Fornecedor com ID " + idFornecedor + " não encontrado.");
+            return;
+        }
+
+        var produtosDoFornecedor = produtosRepository.getRelatorioProdutosFornecedor(idFornecedor);
+
+        System.out.println("---- Listando produtos de " + fornecedorSelecionado.getNome() + " ----");
+
+        if (produtosDoFornecedor.isEmpty()) {
+            System.out.println("Nenhum produto encontrado para este fornecedor.");
+        } else {
+            for (var produto : produtosDoFornecedor) {
+                System.out.println(produto.toString());
+            }
+        }
+        System.out.println("---- Fim do Relatório ----");
+
+    }
+
 }

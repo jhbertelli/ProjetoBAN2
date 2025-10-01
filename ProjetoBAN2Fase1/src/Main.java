@@ -159,10 +159,10 @@ public class Main {
 
     private static void gerenciarProdutos(ProdutosController produtosController) throws SQLException {
         int opcao = 0;
-        final int opcao_voltar = 5;
+        final int opcao_voltar = 6;
 
         while (opcao != opcao_voltar) {
-            exibirMenuCrud("produto", "produtos");
+            exibirMenuCrudProdutos("produto", "produtos");
             opcao = Input.getInt();
 
             switch (opcao) {
@@ -177,6 +177,9 @@ public class Main {
                     break;
                 case 4:
                     produtosController.deleteProduto();
+                    break;
+                case 5:
+                    produtosController.getRelatorioProdutosFornecedor();
                     break;
                 case opcao_voltar:
                     break;
@@ -251,6 +254,17 @@ public class Main {
         System.out.println("5 - Gerar relatorio de " + nomeEntidadePlural + " por Vendedor");
         System.out.println("6 - Gerar relatorio de " + nomeEntidadePlural + " por Categoria");
         System.out.println("7 - Voltar ao menu principal");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static void exibirMenuCrudProdutos(String nomeEntidadeSingular, String nomeEntidadePlural) {
+        System.out.println("---- Gerenciando " + nomeEntidadePlural + " ----");
+        System.out.println("1 - Listar " + nomeEntidadePlural);
+        System.out.println("2 - Adicionar " + nomeEntidadeSingular);
+        System.out.println("3 - Atualizar " + nomeEntidadeSingular);
+        System.out.println("4 - Excluir " + nomeEntidadeSingular);
+        System.out.println("5 - Gerar relatorio de " + nomeEntidadePlural + " por Fornecedor");
+        System.out.println("6 - Voltar ao menu principal");
         System.out.print("Escolha uma opção: ");
     }
 }

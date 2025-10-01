@@ -27,6 +27,21 @@ public class Produto {
         this.quantidade = quantidade;
     }
 
+    public Produto(int id) {
+        this.id = id;
+    }
+
+    public Produto(int id, String nome, int idCategoria, String nomeCategoria, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
+        this.id = id;
+        this.nome = nome;
+        this.idCategoria = idCategoria;
+        this.nomeCategoria = nomeCategoria;
+        this.preco = preco;
+        this.tempoGarantia = tempoGarantia;
+        this.dataRecebimento = dataRecebimento;
+        this.quantidade = quantidade;
+    }
+
     public Produto(String nome, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
         this(0, nome, preco, tempoGarantia, dataRecebimento, quantidade);
     }

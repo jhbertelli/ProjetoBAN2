@@ -35,8 +35,6 @@ public class VendasRepository {
 
             st.execute();
         }
-
-        st.execute();
     }
 
     public int getProximoIdVenda() throws SQLException {

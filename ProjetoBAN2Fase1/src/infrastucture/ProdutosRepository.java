@@ -131,4 +131,65 @@ public class ProdutosRepository {
         st.execute();
         st.close();
     }
+
+    public ArrayList<Produto> getRelatorioProdutosFornecedor(int id) throws SQLException {
+        String sql = "SELECT " +
+                "f.id_fornecedor, " +
+                "f.nome AS fornecedor, " +
+                "p.id_produto, " +
+                "p.nome AS produto, " +
+                "p.id_categoria, " +
+                "c.nome AS categoria, " +
+                "p.preco, " +
+                "p.tempo_garantia, " +
+                "p.data_recebimento, " +
+                "p.quantidade " +
+                "FROM categorias c " +
+                "JOIN produtos p on c.id_categoria=p.id_categoria " +
+                "JOIN fornecedores f on p.id_fornecedor=f.id_fornecedor " +
+                "WHERE f.id_fornecedor = ? " +
+                "ORDER BY p.id_produto";
+
+        ArrayList<Produto> relatorioFinal = new ArrayList<>();
+        Produto produtoAtual = null;
+
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, id);
+
+        ResultSet result = st.executeQuery();
+        while (result.next()) {
+
+            int idProduto = result.getInt("id_produto");
+            String nomeProduto = result.getString("produto");
+            int idCategoria = result.getInt("id_categoria");
+            String nomeCategoria = result.getString("categoria");
+            double precoProduto = result.getDouble("preco");
+            int quantidadeVendida = result.getInt("quantidade");
+            int tempoGarantia = result.getInt("tempo_garantia");
+            Date recebimento = result.getDate("data_recebimento");
+            int quantidade = result.getInt("quantidade");
+            int idFornecedor = result.getInt("id_fornecedor");
+            String nomeFornecedor = result.getString("fornecedor");
+
+
+
+            Produto produto = new Produto(
+                    idProduto,
+                    nomeProduto,
+                    idCategoria,
+                    nomeCategoria,
+                    precoProduto,
+                    tempoGarantia,
+                    recebimento,
+                    quantidade
+            );
+
+            produto.setIdFornecedor(idFornecedor);
+            produto.setNomeFornecedor(nomeFornecedor);
+
+            relatorioFinal.add(produto);
+        }
+
+        return relatorioFinal;
+    }
 }
