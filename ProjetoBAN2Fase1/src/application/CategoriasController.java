@@ -1,6 +1,7 @@
 package application;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import domain.Categoria;
 import infrastucture.CategoriasRepository;
@@ -41,7 +42,14 @@ public class CategoriasController {
     public void updateCategoria() throws SQLException {
         System.out.println("---- Atualizando categorias ----");
 
-        int id = Input.getInt("Insira o ID da categoria a atualizar:");
+        var categorias = categoriasRepository.getAllCategorias();
+
+        if (categorias.isEmpty()) {
+            System.out.println("Erro: nenhuma categoria encontrada! Para atualizar uma categoria, crie uma primeiro.");
+            return;
+        }
+
+        int id = getIdCategoriaDaLista(categorias, "Insira o ID da categoria a atualizar:");
 
         String nome = Input.getString("Insira o novo nome da categoria:");
 
@@ -53,8 +61,36 @@ public class CategoriasController {
     public void deleteCategoria() throws SQLException {
         System.out.println("---- Excluindo categoria ----");
 
-        int id = Input.getInt("Insira o ID da categoria a excluir:");
+        var categorias = categoriasRepository.getAllCategorias();
+
+        if (categorias.isEmpty()) {
+            System.out.println("Erro: nenhuma categoria encontrada! Para excluir uma categoria, crie uma primeiro.");
+            return;
+        }
+
+        int id = getIdCategoriaDaLista(categorias, "Insira o ID da categoria a excluir:");
 
         categoriasRepository.deleteCategoria(id);
+    }
+
+    private static int getIdCategoriaDaLista(ArrayList<Categoria> categorias, String mensagemInput) {
+        System.out.println("Listando todas categorias para edição:");
+
+        for (var categoria : categorias) {
+            System.out.println(categoria.toString());
+        }
+
+        while (true) {
+            int input = Input.getInt(mensagemInput);
+
+            var categoriaEncontrada = categorias
+                .stream()
+                .anyMatch(x -> x.getId() == input);
+
+            if (categoriaEncontrada)
+                return input;
+
+            System.out.println("Categoria " + input + " não encontrada, tente outra.");
+        }
     }
 }

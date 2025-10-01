@@ -5,6 +5,7 @@ import infrastucture.VendedoresRepository;
 import infrastucture.Input;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class VendedoresController {
     private final VendedoresRepository vendedoresRepository;
@@ -45,9 +46,16 @@ public class VendedoresController {
     }
 
     public void updateVendedor() throws SQLException {
-        System.out.println("---- Atualizando vendedores ----");
+        System.out.println("---- Atualizando vendedor ----");
 
-        int id = Input.getInt("Insira o ID do vendedor a atualizar:");
+        var vendedores = vendedoresRepository.getAllVendedores();
+
+        if (vendedores.isEmpty()) {
+            System.out.println("Erro: nenhum vendedor encontrado! Para atualizar um vendedor, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdVendedorDaLista(vendedores, "Insira o ID do vendedor a atualizar:");
 
         String nome = Input.getString("Insira o novo nome do vendedor:");
 
@@ -65,8 +73,36 @@ public class VendedoresController {
     public void deleteVendedor() throws SQLException {
         System.out.println("---- Excluindo vendedor ----");
 
-        int id = Input.getInt("Insira o ID do vendedor a excluir:");
+        var vendedores = vendedoresRepository.getAllVendedores();
+
+        if (vendedores.isEmpty()) {
+            System.out.println("Erro: nenhum vendedor encontrado! Para excluir um vendedor, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdVendedorDaLista(vendedores, "Insira o ID do vendedor a excluir:");
 
         vendedoresRepository.deleteVendedor(id);
+    }
+
+    private static int getIdVendedorDaLista(ArrayList<Vendedor> vendedores, String mensagemInput) {
+        System.out.println("Listando todos vendedores para edição:");
+
+        for (var vendedor : vendedores) {
+            System.out.println(vendedor.toString());
+        }
+
+        while (true) {
+            int input = Input.getInt(mensagemInput);
+
+            var vendedorEncontrado = vendedores
+                    .stream()
+                    .anyMatch(x -> x.getId() == input);
+
+            if (vendedorEncontrado)
+                return input;
+
+            System.out.println("Vendedor " + input + " não encontrado, tente outro.");
+        }
     }
 }

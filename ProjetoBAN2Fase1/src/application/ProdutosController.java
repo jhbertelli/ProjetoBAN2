@@ -8,6 +8,7 @@ import infrastucture.Input;
 
 import java.sql.SQLException;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class ProdutosController {
     private final ProdutosRepository produtosRepository;
@@ -108,7 +109,14 @@ public class ProdutosController {
     public void updateProduto() throws SQLException {
         System.out.println("---- Atualizando produtos ----");
 
-        int id = Input.getInt("Insira o ID do produto a atualizar:");
+        var produtos = produtosRepository.getAllProdutos();
+
+        if (produtos.isEmpty()) {
+            System.out.println("Erro: nenhum produto encontrado! Para atualizar um produto, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdProdutoDaLista(produtos, "Insira o ID do produto a atualizar:");
 
         String nome = Input.getString("Insira o novo nome do produto:");
         double preco = Input.getDouble("Insira o novo preço do produto:");
@@ -131,8 +139,36 @@ public class ProdutosController {
     public void deleteProduto() throws SQLException {
         System.out.println("---- Excluindo produto ----");
 
-        int id = Input.getInt("Insira o ID do produto a excluir:");
+        var produtos = produtosRepository.getAllProdutos();
+
+        if (produtos.isEmpty()) {
+            System.out.println("Erro: nenhum produto encontrado! Para excluir um produto, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdProdutoDaLista(produtos, "Insira o ID do produto a excluir:");
 
         produtosRepository.deleteProduto(id);
+    }
+
+    private static int getIdProdutoDaLista(ArrayList<Produto> produtos, String mensagemInput) {
+        System.out.println("Listando todos produtos para edição:");
+
+        for (var produto : produtos) {
+            System.out.println(produto.toString());
+        }
+
+        while (true) {
+            int input = Input.getInt(mensagemInput);
+
+            var produtoEncontrado = produtos
+                    .stream()
+                    .anyMatch(x -> x.getId() == input);
+
+            if (produtoEncontrado)
+                return input;
+
+            System.out.println("Produto " + input + " não encontrado, tente outro.");
+        }
     }
 }

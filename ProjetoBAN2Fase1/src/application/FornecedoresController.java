@@ -5,6 +5,7 @@ import infrastucture.FornecedoresRepository;
 import infrastucture.Input;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class FornecedoresController {
     private final FornecedoresRepository fornecedoresRepository;
@@ -46,7 +47,14 @@ public class FornecedoresController {
     public void updateFornecedor() throws SQLException {
         System.out.println("---- Atualizando fornecedores ----");
 
-        int id = Input.getInt("Insira o ID do fornecedor a atualizar:");
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
+
+        if (fornecedores.isEmpty()) {
+            System.out.println("Erro: nenhum fornecedor encontrado! Para atualizar um fornecedor, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdFornecedorDaLista(fornecedores, "Insira o ID do fornecedor a atualizar:");
 
         String nome = Input.getString("Insira o novo nome do fornecedor:");
         String nomeFantasia = Input.getString("Insira o novo nome fantasia do fornecedor:");
@@ -63,10 +71,36 @@ public class FornecedoresController {
     public void deleteFornecedor() throws SQLException {
         System.out.println("---- Excluindo fornecedor ----");
 
-        int id = Input.getInt("Insira o ID do fornecedor a excluir:");
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
+
+        if (fornecedores.isEmpty()) {
+            System.out.println("Erro: nenhum fornecedor encontrado! Para excluir um fornecedor, crie um primeiro.");
+            return;
+        }
+
+        int id = getIdFornecedorDaLista(fornecedores, "Insira o ID do fornecedor a excluir:");
 
         fornecedoresRepository.deleteFornecedor(id);
     }
 
+    private static int getIdFornecedorDaLista(ArrayList<Fornecedor> fornecedores, String mensagemInput) {
+        System.out.println("Listando todos fornecedores para edição:");
 
+        for (var fornecedor : fornecedores) {
+            System.out.println(fornecedor.toString());
+        }
+
+        while (true) {
+            int input = Input.getInt(mensagemInput);
+
+            var fornecedorEncontrado = fornecedores
+                .stream()
+                .anyMatch(x -> x.getId() == input);
+
+            if (fornecedorEncontrado)
+                return input;
+
+            System.out.println("Fornecedor " + input + " não encontrado, tente outro.");
+        }
+    }
 }
