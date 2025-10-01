@@ -66,8 +66,8 @@ public class ProdutosRepository {
                     "p.quantidade, " +
                     "f.nome as fornecedor_nome " +
                     "FROM produtos p " +
-                    "NATURAL JOIN categorias c " +
-                    "NATURAL JOIN fornecedores f " +
+                    "JOIN categorias c on p.id_categoria=c.id_categoria " +
+                    "JOIN fornecedores f on p.id_fornecedor=f.id_fornecedor " +
                     "ORDER BY id_produto"
         );
 
@@ -93,6 +93,8 @@ public class ProdutosRepository {
             //p.setIdFornecedor(f.getId());
             p.setNomeCategoria(c.getNome());
             p.setNomeFornecedor(f.getNome());
+
+
 
             aProdutos.add(p);
         }

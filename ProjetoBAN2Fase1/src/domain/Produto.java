@@ -110,13 +110,15 @@ public class Produto {
     @Override
     public String toString() {
         return String.format(
-            "ID: %d | Nome: %s | Preço: R$%.2f | Quantidade: %d | Tempo de Garantia: %d meses | Data de Recebimento: %s\n",
+            "ID: %d | Nome: %s | Categoria: %s | Preço: R$%.2f | Quantidade: %d | Tempo de Garantia: %d meses | Data de Recebimento: %s | Fornecedor: %s",
             id,
             nome,
+            nomeCategoria,
             preco,
             quantidade,
             tempoGarantia,
-            dataRecebimento
+            dataRecebimento,
+            nomeFornecedor
         );
     }
 }
