@@ -25,6 +25,11 @@ public class Fornecedor {
         this.emailContato = emailContato;
     }
 
+    public Fornecedor(String nome) {
+        this.id = 0;
+        this.nome = nome;
+    }
+
     public int getId() {
         return id;
     }

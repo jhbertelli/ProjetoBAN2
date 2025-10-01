@@ -24,6 +24,10 @@ public class VendasController {
 //        }
 //
 //        for (var venda : vendas) {
+//           System.out.printf(categoria.toString());
+//        }
+//
+//        for (var venda : vendas) {
 //            System.out.printf(
 //                "ID: %d | Nome: %s | Endereço: %s | Telefone: %s | E-mail: %s\n",
 //                venda.getId(),

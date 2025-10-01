@@ -1,5 +1,7 @@
 package infrastucture;
 
+import domain.Categoria;
+import domain.Fornecedor;
 import domain.Produto;
 
 import java.sql.*;
@@ -51,26 +53,51 @@ public class ProdutosRepository {
 
     public ArrayList<Produto> getAllProdutos() throws SQLException {
         Statement st = connection.createStatement();
-        ArrayList<Produto> produtos = new ArrayList<>();
+        ArrayList<Produto> aProdutos = new ArrayList<>();
 
         ResultSet result = st.executeQuery(
-            "SELECT id_produto, nome, preco, tempo_garantia, data_recebimento, quantidade FROM produtos ORDER BY id_produto"
+            "SELECT " +
+                    "p.id_produto, " +
+                    "c.nome as categoria_nome, " +
+                    "p.nome, " +
+                    "p.preco, " +
+                    "p.tempo_garantia, " +
+                    "p.data_recebimento, " +
+                    "p.quantidade, " +
+                    "f.nome as fornecedor_nome " +
+                    "FROM produtos p " +
+                    "NATURAL JOIN categorias c " +
+                    "NATURAL JOIN fornecedores f " +
+                    "ORDER BY id_produto"
         );
 
         while (result.next()) {
-            produtos.add(
-                new Produto(
+            Produto p = new Produto(
                     result.getInt(1),
-                    result.getString(2),
-                    result.getDouble(3),
-                    result.getInt(4),
-                    result.getDate(5),
-                    result.getInt(6)
-                )
+                    result.getString(3),
+                    result.getDouble(4),
+                    result.getInt(5),
+                    result.getDate(6),
+                    result.getInt(7)
             );
+
+            Categoria c = new Categoria(
+                    result.getString("categoria_nome")
+            );
+
+            Fornecedor f = new Fornecedor(
+                    result.getString("fornecedor_nome")
+            );
+
+            //p.setIdCategoria(c.getId());
+            //p.setIdFornecedor(f.getId());
+            p.setNomeCategoria(c.getNome());
+            p.setNomeFornecedor(f.getNome());
+
+            aProdutos.add(p);
         }
 
-        return produtos;
+        return aProdutos;
     }
 
     public void updateProduto(Produto produto) throws SQLException {

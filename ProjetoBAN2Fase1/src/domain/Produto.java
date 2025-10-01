@@ -11,6 +11,8 @@ public class Produto {
     private int tempoGarantia;
     private Date dataRecebimento;
     private int quantidade;
+    private String nomeCategoria;
+    private String nomeFornecedor;
 
     public Produto(int id, String nome, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
         this.id = id;
@@ -43,6 +45,22 @@ public class Produto {
 
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
+    }
+
+    public String getNomeCategoria() {
+        return nomeCategoria;
+    }
+
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
+    }
+
+    public String getNomeFornecedor() {
+        return nomeFornecedor;
+    }
+
+    public void setNomeFornecedor(String nomeFornecedor) {
+        this.nomeFornecedor = nomeFornecedor;
     }
 
     public String getNome() {
