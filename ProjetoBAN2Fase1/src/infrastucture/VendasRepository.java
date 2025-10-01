@@ -5,8 +5,7 @@ import domain.Venda;
 import domain.Vendedor;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class VendasRepository {
     private final Connection connection;
@@ -168,6 +167,100 @@ public class VendasRepository {
         return  relatorioFinal;
     }
 
+    public ArrayList<Venda> getRelatorioVendasCategoria(int id) throws SQLException {
+        String sql = "SELECT " +
+                "ve.id_vendedor, " +
+                "ve.nome AS vendedor, " +
+                "c.nome AS categoria, " +
+                "v.id_venda, " +
+                "p.id_produto, " +
+                "p.nome AS produto, " +
+                "vp.quantidade_vendida, " +
+                "p.preco " +
+                "FROM vendedores ve " +
+                "JOIN vendas v on ve.id_vendedor=v.id_vendedor " +
+                "JOIN venda_produto vp on v.id_venda=vp.id_venda " +
+                "JOIN produtos p on vp.id_produto=p.id_produto " +
+                "JOIN categorias c on p.id_categoria=c.id_categoria " +
+                "WHERE c.id_categoria = ? " +
+                "ORDER BY v.id_venda";
+
+        ArrayList<Venda> relatorioFinal = new ArrayList<>();
+        Venda vendaAtual = null;
+
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1,id);
+
+        ResultSet result = st.executeQuery();
+        while (result.next()) {
+            int idVendaDaLinha = result.getInt("id_venda");
+
+            if(vendaAtual == null || vendaAtual.getId() != idVendaDaLinha) {
+                vendaAtual = new Venda(idVendaDaLinha);
+
+                int idVendedor = result.getInt("id_vendedor");
+                String nomeVendedor = result.getString("vendedor");
+                vendaAtual.setVendedor(new Vendedor(idVendedor, nomeVendedor, null, null, null));
+
+                relatorioFinal.add(vendaAtual);
+            }
+
+            int idProduto = result.getInt("id_produto");
+            String nomeProduto = result.getString("produto");
+            double precoProduto = result.getDouble("preco");
+            int quantidadeVendida = result.getInt("quantidade_vendida");
+
+            Produto produto = new Produto(idProduto, nomeProduto, precoProduto, 0, null, 0);
+
+            vendaAtual.adicionarProduto(produto, quantidadeVendida);
+        }
+
+        return relatorioFinal;
+    }
+
+//    public Map<String, Integer> getRelatorioVendasCategorias(int id) throws SQLException {
+//        String sql = "SELECT " +
+//                "c.nome AS categoria, " +
+//                "SUM(vp.quantidade_vendida) as quantidade " +
+//                "FROM categorias c " +
+//                "JOIN produtos p on p.id_categoria=c.id_categoria " +
+//                "JOIN venda_produto vp on vp.id_produto=p.id_produto " +
+//                "WHERE c.id_categoria = ? " +
+//                "GROUP BY c.id_categoria";
+//
+//        PreparedStatement st = connection.prepareStatement(sql);
+//        st.setInt(1, id);
+//
+//        try(ResultSet result = st.executeQuery()) {
+//            if (result.next()) {
+//                String nomeCategoria = result.getString("categoria");
+//                int totalVendido = result.getInt("quantidade");
+//
+//                return Map.of(nomeCategoria, totalVendido);
+//            }
+//        }
+//
+//        return Collections.emptyMap();
+//    }
+
+
+//    public ArrayList<Venda> getRelatorioVendasCategorias(int id) throws SQLException {
+//        String sql = "SELECT " +
+//                "c.nome AS categoria, " +
+//                "SUM(vp.quantidade_vendida) as quantidade " +
+//                "FROM categorias c " +
+//                "JOIN produtos p on p.id_categoria=c.id_categoria " +
+//                "JOIN venda_produto vp on vp.id_produto=p.id_produto " +
+//                "WHERE c.id_categoria = ? " +
+//                "GROUP BY c.id_categoria";
+//
+//        PreparedStatement st = connection.prepareStatement(sql);
+//        st.setInt(1, id);
+//
+//
+//
+//        return relatorioFinal;
+//    }
 
 //
 //    public void updateVenda(Venda produto) throws SQLException {

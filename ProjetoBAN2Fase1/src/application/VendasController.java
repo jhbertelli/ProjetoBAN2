@@ -1,27 +1,29 @@
 package application;
 
+import domain.Categoria;
 import domain.Venda;
 import domain.Vendedor;
-import infrastucture.Input;
-import infrastucture.ProdutosRepository;
-import infrastucture.VendasRepository;
-import infrastucture.VendedoresRepository;
+import infrastucture.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SimpleTimeZone;
 
 public class VendasController {
     private final VendasRepository vendasRepository;
     private final ProdutosRepository produtosRepository;
     private final VendedoresRepository vendedoresRepository;
+    private final CategoriasRepository categoriasRepository;
 
-    public VendasController(VendasRepository vendasRepository, ProdutosRepository produtosRepository, VendedoresRepository vendedoresRepository) {
+    public VendasController(VendasRepository vendasRepository, ProdutosRepository produtosRepository, VendedoresRepository vendedoresRepository, CategoriasRepository categoriasRepository) {
         this.vendasRepository = vendasRepository;
         this.produtosRepository = produtosRepository;
         this.vendedoresRepository = vendedoresRepository;
+        this.categoriasRepository = categoriasRepository;
     }
 
     public void getAllVendas() throws SQLException {
@@ -191,6 +193,78 @@ public class VendasController {
         System.out.println("---- Fim do Relatório ----");
 
     }
+
+    public void getRelatorioVendasCategoria() throws SQLException {
+        System.out.println("---- Relatório de vendas por categoria ----");
+
+        var categorias = categoriasRepository.getAllCategorias();
+        if (categorias.isEmpty()){
+            System.out.println("Nenhuma categoria cadastrada. Impossível gerar relatório.");
+            return;
+        }
+
+        System.out.println("Categorias disponíveis:\n");
+        for (var categoria : categorias){
+            System.out.println(categoria.toString());
+        }
+
+        int idCategoria = Input.getInt("Insira o id da categoria a ser consultada:");
+        Categoria categoriaSelecionada = categorias.stream()
+                .filter(v -> v.getId() == idCategoria)
+                .findFirst()
+                .orElse(null);
+
+        if (categoriaSelecionada == null) {
+            System.out.println("Erro: Categoria com ID " + idCategoria + " não encontrada.");
+            return;
+        }
+
+        var vendasDaCategoria = vendasRepository.getRelatorioVendasCategoria(idCategoria);
+
+        System.out.println("---- Listando vendas de " + categoriaSelecionada.getNome() + " ----");
+
+        if (vendasDaCategoria.isEmpty()) {
+            System.out.println("Nenhuma venda encontrada para esta categoria.");
+        } else {
+            for (var venda : vendasDaCategoria) {
+                System.out.println(venda.toString());
+            }
+        }
+        System.out.println("---- Fim do Relatório ----");
+
+    }
+
+//    public void getRelatorioVendasCategoria() throws SQLException{
+//        System.out.println("---- Relatório de vendas por categoria ----");
+//
+//        var categorias = categoriasRepository.getAllCategorias();
+//        if(categorias.isEmpty()){
+//            System.out.println("Nenhuma catehoria cadastrada. Impossível gerar relatório.");
+//            return;
+//        }
+//
+//        System.out.println("Categorias disponíveis:\n");
+//        for (var categoria : categorias) {
+//            System.out.println(categoria.toString());
+//        }
+//
+//        int idCategoria = Input.getInt("Insira o id da categoria a ser consultada:");
+//
+//        Map<String, Integer> relatorio = vendasRepository.getRelatorioVendasCategorias(idCategoria);
+//
+//        if(!relatorio.isEmpty()) {
+//            System.out.println("\n---- Resultado do Relatório ----");
+//            for(Map.Entry<String, Integer> entry : relatorio.entrySet()) {
+//                System.out.println("Categoria: " + entry.getKey());
+//                System.out.println("Total de unidades vendidas: " + entry.getValue());
+//            }
+//            System.out.println("---- Fim do Relatório ----");
+//        } else {
+//            System.out.println("Nenhuma venda encontrada para a cetegoria com ID " + idCategoria);
+//        }
+//    }
+
+
 
 //
 //    public void vendasPorCategoria() throws SQLException {

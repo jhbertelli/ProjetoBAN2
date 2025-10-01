@@ -34,7 +34,7 @@ public class Main {
         var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
 
         var vendasRepository = new VendasRepository(connection);
-        var vendasController = new VendasController(vendasRepository, produtosRepository, vendedoresRepository);
+        var vendasController = new VendasController(vendasRepository, produtosRepository, vendedoresRepository, categoriasRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenuPrincipal();
@@ -188,10 +188,10 @@ public class Main {
 
     private static void gerenciarVendas(VendasController vendasController) throws SQLException {
         int opcao = 0;
-        final int opcao_voltar = 6;
+        final int opcao_voltar = 7;
 
         while (opcao != opcao_voltar) {
-            exibirMenuCrud("venda", "vendas");
+            exibirMenuCrudVendas("venda", "vendas");
             opcao = Input.getInt();
 
             switch (opcao) {
@@ -209,6 +209,9 @@ public class Main {
                     break;
                 case 5:
                     vendasController.getRelatorioVendas();
+                    break;
+                case 6:
+                    vendasController.getRelatorioVendasCategoria();
                     break;
                 case opcao_voltar:
                     break;
@@ -235,8 +238,19 @@ public class Main {
         System.out.println("2 - Adicionar " + nomeEntidadeSingular);
         System.out.println("3 - Atualizar " + nomeEntidadeSingular);
         System.out.println("4 - Excluir " + nomeEntidadeSingular);
-        System.out.println("5 - Relatorio de " + nomeEntidadePlural + " por vendedor");
-        System.out.println("6 - Voltar ao menu principal");
+        System.out.println("5 - Voltar ao menu principal");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static void exibirMenuCrudVendas(String nomeEntidadeSingular, String nomeEntidadePlural) {
+        System.out.println("---- Gerenciando " + nomeEntidadePlural + " ----");
+        System.out.println("1 - Listar " + nomeEntidadePlural);
+        System.out.println("2 - Adicionar " + nomeEntidadeSingular);
+        System.out.println("3 - Atualizar " + nomeEntidadeSingular);
+        System.out.println("4 - Excluir " + nomeEntidadeSingular);
+        System.out.println("5 - Gerar relatorio de " + nomeEntidadePlural + " por Vendedor");
+        System.out.println("6 - Gerar relatorio de " + nomeEntidadePlural + " por Categoria");
+        System.out.println("7 - Voltar ao menu principal");
         System.out.print("Escolha uma opção: ");
     }
 }
