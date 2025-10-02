@@ -151,7 +151,6 @@ public class ProdutosRepository {
                 "ORDER BY p.id_produto";
 
         ArrayList<Produto> relatorioFinal = new ArrayList<>();
-        Produto produtoAtual = null;
 
         PreparedStatement st = connection.prepareStatement(sql);
         st.setInt(1, id);
@@ -192,4 +191,66 @@ public class ProdutosRepository {
 
         return relatorioFinal;
     }
+
+    public ArrayList<Produto> getRelatorioProdutosCategoria (int id) throws SQLException {
+        String sql = "SELECT " +
+                "p.id_produto, " +
+                "p.nome AS produto, " +
+                "p.id_categoria, " +
+                "c.nome AS categoria, " +
+                "p.preco, " +
+                "p.tempo_garantia, " +
+                "p.data_recebimento, " +
+                "p.quantidade, " +
+                "f.id_fornecedor, " +
+                "f.nome AS fornecedor " +
+                "FROM categorias c " +
+                "JOIN produtos p on c.id_categoria=p.id_categoria " +
+                "JOIN fornecedores f on p.id_fornecedor=f.id_fornecedor " +
+                "WHERE c.id_categoria = ? " +
+                "ORDER BY p.id_produto";
+
+        ArrayList<Produto> relatorioFinal = new ArrayList<>();
+
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, id);
+
+
+
+        ResultSet result = st.executeQuery();
+        while (result.next()) {
+
+            int idProduto = result.getInt("id_produto");
+            String nomeProduto = result.getString("produto");
+            int idCategoria = result.getInt("id_categoria");
+            String nomeCategoria = result.getString("categoria");
+            int precoProduto = result.getInt("preco");
+            int tempoGarantia = result.getInt("tempo_garantia");
+            Date dataRecebimento = result.getDate("data_recebimento");
+            int quantidadeProduto = result.getInt("quantidade");
+            int idFornecedor = result.getInt("id_fornecedor");
+            String nomeFornecedor = result.getString("fornecedor");
+
+            Produto produto = new Produto(
+                    idProduto,
+                    nomeProduto,
+                    idCategoria,
+                    nomeCategoria,
+                    precoProduto,
+                    tempoGarantia,
+                    dataRecebimento,
+                    quantidadeProduto
+            );
+
+            produto.setIdFornecedor(idFornecedor);
+            produto.setNomeFornecedor(nomeFornecedor);
+
+            relatorioFinal.add(produto);
+
+        }
+
+        return relatorioFinal;
+    }
+
+
 }

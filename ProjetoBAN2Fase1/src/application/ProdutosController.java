@@ -1,5 +1,6 @@
 package application;
 
+import domain.Categoria;
 import domain.Fornecedor;
 import domain.Produto;
 import infrastucture.CategoriasRepository;
@@ -212,5 +213,45 @@ public class ProdutosController {
         System.out.println("---- Fim do Relatório ----");
 
     }
+
+    public void getRelatorioProdutosCategoria() throws SQLException {
+        System.out.println("---- Relatório de Produtos por Categoria ----");
+
+        var categorias = categoriasRepository.getAllCategorias();
+        if (categorias.isEmpty()) {
+            System.out.println("Nenhuma categoria cadastrada. Impossível gerar relatório.");
+            return;
+        }
+
+        System.out.println("Categorais disponíveis:\n");
+        for (var categoria : categorias) {
+            System.out.println(categoria.toString());
+        }
+
+        int idCategoria = Input.getInt("Insira o id da categoria a ser consultada:");
+        Categoria categoriaSelecionada = categorias.stream()
+                .filter(x -> x.getId() == idCategoria)
+                .findFirst()
+                .orElse(null);
+
+        if (categoriaSelecionada == null) {
+            System.out.println("Erro: Categoria com ID " + idCategoria + " não encontrada.");
+            return;
+        }
+
+        var produtosDoCategoria = produtosRepository.getRelatorioProdutosCategoria(idCategoria);
+
+        System.out.println("---- Listando produtos de " + categoriaSelecionada.getNome() + " ----");
+
+        if (produtosDoCategoria.isEmpty()) {
+            System.out.println("Nenhum produto encontrado para esta categoria.");
+        } else {
+            for (var produto : produtosDoCategoria) {
+                System.out.println(produto.toString());
+            }
+        }
+        System.out.println("---- Fim do Relatório ----");
+    }
+
 
 }
