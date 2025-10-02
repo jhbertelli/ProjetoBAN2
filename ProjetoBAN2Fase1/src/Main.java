@@ -210,7 +210,7 @@ public class Main {
                     vendasController.updateVenda();
                     break;
                 case 4:
-                    System.out.println("Operação não implementada");
+                    vendasController.deleteVenda();
                     break;
                 case 5:
                     vendasController.getRelatorioVendas();

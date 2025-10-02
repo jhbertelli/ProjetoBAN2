@@ -292,12 +292,41 @@ public class VendasController {
 
     }
 
-//
-//    public void deleteVenda() throws SQLException {
-//        System.out.println("---- Excluindo venda ----");
-//
-//        int id = Input.getInt("Insira o ID do venda a excluir:");
-//
-//        vendasRepository.deleteVenda(id);
-//    }
+    public void deleteVenda() throws SQLException {
+        System.out.println("---- Excluindo venda ----");
+
+        var vendas = vendasRepository.getAllVendas();
+
+        if (vendas.isEmpty()) {
+            System.out.println("Nenhuma venda encontrada para excluir.");
+            return;
+        }
+
+        System.out.println("---- Listando vendas existentes ----");
+
+        for (var venda : vendas) {
+            System.out.println(venda.toString());
+        }
+
+        int idVenda = Input.getInt("Insira o ID da venda a ser excluída:");
+
+        Venda vendaParaExcluir = vendas.stream()
+            .filter(v -> v.getId() == idVenda)
+            .findFirst()
+            .orElse(null);
+
+        if (vendaParaExcluir == null) {
+            System.out.println("Venda com ID " + idVenda + " não encontrada.");
+            return;
+        }
+
+        for (var vendaProduto : vendaParaExcluir.getVendaProdutos()) {
+            produtosRepository.incrementarQuantidade(
+                vendaProduto.getProduto().getId(),
+                vendaProduto.getQuantidadeVendida()
+            );
+        }
+
+        vendasRepository.deleteVenda(idVenda);
+    }
 }

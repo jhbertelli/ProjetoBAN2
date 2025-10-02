@@ -242,4 +242,15 @@ public class VendasRepository {
 
         st.close();
     }
+
+    public void deleteVenda(int id) throws SQLException {
+        PreparedStatement st = connection.prepareStatement("DELETE FROM venda_produto WHERE id_venda = ?");
+        st.setInt(1, id);
+        st.execute();
+
+        st = connection.prepareStatement("DELETE FROM vendas WHERE id_venda = ?");
+        st.setInt(1, id);
+        st.execute();
+        st.close();
+    }
 }
