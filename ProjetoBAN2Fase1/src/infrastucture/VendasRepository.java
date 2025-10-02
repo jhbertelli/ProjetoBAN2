@@ -35,6 +35,8 @@ public class VendasRepository {
 
             st.execute();
         }
+
+        st.close();
     }
 
     public int getProximoIdVenda() throws SQLException {
@@ -86,7 +88,7 @@ public class VendasRepository {
             }
 
             PreparedStatement stVendaProduto = connection.prepareStatement(
-                "SELECT vp.quantidade_vendida, p.nome, p.preco FROM venda_produto vp JOIN produtos p ON vp.id_produto = p.id_produto WHERE id_venda = ?"
+                "SELECT vp.quantidade_vendida, p.nome, p.preco, p.id_produto FROM venda_produto vp JOIN produtos p ON vp.id_produto = p.id_produto WHERE id_venda = ?"
             );
 
             stVendaProduto.setInt(1, venda.getId());
@@ -94,7 +96,7 @@ public class VendasRepository {
 
             while (resultVendaProduto.next()) {
                 int quantidadeVendida = resultVendaProduto.getInt(1);
-                var produto = new Produto();
+                var produto = new Produto(resultVendaProduto.getInt(4));
                 produto.setNome(resultVendaProduto.getString(2));
                 produto.setPreco(resultVendaProduto.getInt(3));
 
@@ -107,12 +109,6 @@ public class VendasRepository {
 
         return vendas;
     }
-
-//    public List<Venda> relatorioVendas(int idVendedor) throws SQLException {
-//
-//        PreparedStatement ps = connection.prepareStatement(sql);
-//
-//    }
 
     public ArrayList<Venda> getRelatorioVendas(int id) throws SQLException {
         String sql ="SELECT " +
@@ -219,66 +215,31 @@ public class VendasRepository {
         return relatorioFinal;
     }
 
-//    public Map<String, Integer> getRelatorioVendasCategorias(int id) throws SQLException {
-//        String sql = "SELECT " +
-//                "c.nome AS categoria, " +
-//                "SUM(vp.quantidade_vendida) as quantidade " +
-//                "FROM categorias c " +
-//                "JOIN produtos p on p.id_categoria=c.id_categoria " +
-//                "JOIN venda_produto vp on vp.id_produto=p.id_produto " +
-//                "WHERE c.id_categoria = ? " +
-//                "GROUP BY c.id_categoria";
-//
-//        PreparedStatement st = connection.prepareStatement(sql);
-//        st.setInt(1, id);
-//
-//        try(ResultSet result = st.executeQuery()) {
-//            if (result.next()) {
-//                String nomeCategoria = result.getString("categoria");
-//                int totalVendido = result.getInt("quantidade");
-//
-//                return Map.of(nomeCategoria, totalVendido);
-//            }
-//        }
-//
-//        return Collections.emptyMap();
-//    }
+    public void updateVenda(Venda venda) throws SQLException {
+        PreparedStatement st = connection.prepareStatement("UPDATE vendas SET id_vendedor = ? WHERE id_venda = ?");
 
+        if (venda.getVendedor() == null) {
+            st.setNull(1, Types.INTEGER);
+        } else {
+            st.setInt(1, venda.getVendedor().getId());
+        }
+        st.setInt(2, venda.getId());
+        st.executeUpdate();
 
-//    public ArrayList<Venda> getRelatorioVendasCategorias(int id) throws SQLException {
-//        String sql = "SELECT " +
-//                "c.nome AS categoria, " +
-//                "SUM(vp.quantidade_vendida) as quantidade " +
-//                "FROM categorias c " +
-//                "JOIN produtos p on p.id_categoria=c.id_categoria " +
-//                "JOIN venda_produto vp on vp.id_produto=p.id_produto " +
-//                "WHERE c.id_categoria = ? " +
-//                "GROUP BY c.id_categoria";
-//
-//        PreparedStatement st = connection.prepareStatement(sql);
-//        st.setInt(1, id);
-//
-//
-//
-//        return relatorioFinal;
-//    }
+        st = connection.prepareStatement("DELETE FROM venda_produto WHERE id_venda = ?");
+        st.setInt(1, venda.getId());
+        st.execute();
 
-//
-//    public void updateVenda(Venda produto) throws SQLException {
-//        PreparedStatement st = connection.prepareStatement(
-//            "UPDATE produtos SET id_categoria=?, id_fornecedor=?, nome=?, preco=?, tempo_garantia=?, data_recebimento=?, quantidade=? WHERE id_produto=?"
-//        );
-//
-//        st.setInt(1, produto.getIdCategoria());
-//        st.setInt(2, produto.getIdFornecedor());
-//        st.setString(3, produto.getNome());
-//        st.setDouble(4, produto.getPreco());
-//        st.setInt(5, produto.getTempoGarantia());
-//        st.setDate(6, produto.getDataRecebimento());
-//        st.setInt(7, produto.getQuantidade());
-//        st.setInt(8, produto.getId());
-//
-//        st.execute();
-//        st.close();
-//    }
+        for (var vendaProduto : venda.getVendaProdutos()) {
+            st = connection.prepareStatement(
+                "INSERT INTO venda_produto (id_produto, id_venda, quantidade_vendida) VALUES (?,?,?)"
+            );
+            st.setInt(1, vendaProduto.getProduto().getId());
+            st.setInt(2, vendaProduto.getIdVenda());
+            st.setInt(3, vendaProduto.getQuantidadeVendida());
+            st.execute();
+        }
+
+        st.close();
+    }
 }

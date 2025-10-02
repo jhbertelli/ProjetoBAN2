@@ -1,17 +1,13 @@
 package application;
 
 import domain.Categoria;
+import domain.Produto;
 import domain.Venda;
 import domain.Vendedor;
 import infrastucture.*;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SimpleTimeZone;
 
 public class VendasController {
     private final VendasRepository vendasRepository;
@@ -53,39 +49,23 @@ public class VendasController {
 
         var vendedores = vendedoresRepository.getAllVendedores();
 
-        int idVendedor = 0;
-
-        if (!vendedores.isEmpty()) {
-            System.out.println("Listando vendedores:");
-
-            for (var vendedor : vendedores) {
-                System.out.println(vendedor.toString());
-            }
-
-            idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
-
-            while (idVendedor > 0) {
-                int finalIdVendedor = idVendedor;
-
-                var vendedorEncontrado = vendedores
-                    .stream()
-                    .anyMatch(x -> x.getId() == finalIdVendedor);
-
-                if (!vendedorEncontrado) {
-                    idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
-                } else {
-                    break;
-                }
-            }
-        } else {
-            System.out.println("Nenhum vendedor encontrado, prosseguindo para adição de produtos na venda");
-        }
-
-        Vendedor vendedor = idVendedor > 0 ? new Vendedor(idVendedor) : null;
+        Vendedor vendedor = findVendedorFromLista(vendedores);
 
         int proximoIdVenda = vendasRepository.getProximoIdVenda();
 
-        var venda = new Venda(proximoIdVenda);
+        var venda = criarVenda(proximoIdVenda, vendedor, produtos);
+
+        for (var vendaProduto : venda.getVendaProdutos())
+            produtosRepository.decrementarQuantidade(
+                vendaProduto.getProduto().getId(),
+                vendaProduto.getQuantidadeVendida()
+            );
+
+        vendasRepository.createVenda(venda);
+    }
+
+    private static Venda criarVenda(int idVenda, Vendedor vendedor, ArrayList<Produto> produtos) {
+        var venda = new Venda(idVenda);
         venda.setVendedor(vendedor);
 
         System.out.println("Listando produtos:");
@@ -144,24 +124,92 @@ public class VendasController {
             System.out.println("Produto " + idProduto + " adicionado com a quantidade: " + quantidade);
         }
 
-        for (var vendaProduto : venda.getVendaProdutos())
+        return venda;
+    }
+
+    private static Vendedor findVendedorFromLista(ArrayList<Vendedor> vendedores) {
+        int idVendedor = 0;
+
+        if (!vendedores.isEmpty()) {
+            System.out.println("Listando vendedores:");
+
+            for (var vendedor : vendedores) {
+                System.out.println(vendedor.toString());
+            }
+
+            idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+
+            while (idVendedor > 0) {
+                int finalIdVendedor = idVendedor;
+
+                var vendedorEncontrado = vendedores
+                    .stream()
+                    .anyMatch(x -> x.getId() == finalIdVendedor);
+
+                if (!vendedorEncontrado) {
+                    idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+                } else {
+                    break;
+                }
+            }
+        } else {
+            System.out.println("Nenhum vendedor encontrado, prosseguindo para adição de produtos na venda");
+        }
+
+        return idVendedor > 0 ? new Vendedor(idVendedor) : null;
+    }
+
+    public void updateVenda() throws SQLException {
+        System.out.println("---- Atualizando venda ----");
+
+        var vendas = vendasRepository.getAllVendas();
+
+        if (vendas.isEmpty()) {
+            System.out.println("Nenhuma venda encontrada para atualizar.");
+            return;
+        }
+
+        System.out.println("---- Listando vendas existentes ----");
+        for (var venda : vendas) {
+            System.out.println(venda.toString());
+        }
+
+        int idVenda = Input.getInt("Insira o ID da venda a ser atualizada:");
+
+        Venda vendaOriginal = vendas.stream()
+            .filter(v -> v.getId() == idVenda)
+            .findFirst()
+            .orElse(null);
+
+        if (vendaOriginal == null) {
+            System.out.println("Venda com ID " + idVenda + " não encontrada.");
+            return;
+        }
+
+        for (var vendaProduto : vendaOriginal.getVendaProdutos()) {
+            produtosRepository.incrementarQuantidade(
+                vendaProduto.getProduto().getId(),
+                vendaProduto.getQuantidadeVendida()
+            );
+        }
+
+        System.out.println("---- Insira os novos dados para a venda ----");
+
+        var vendedores = vendedoresRepository.getAllVendedores();
+        Vendedor vendedor = findVendedorFromLista(vendedores);
+
+        var produtos = produtosRepository.getAllProdutos();
+
+        var vendaAtualizada = criarVenda(idVenda, vendedor, produtos);
+
+        for (var vendaProduto : vendaAtualizada.getVendaProdutos())
             produtosRepository.decrementarQuantidade(
                 vendaProduto.getProduto().getId(),
                 vendaProduto.getQuantidadeVendida()
             );
 
-        vendasRepository.createVenda(venda);
+        vendasRepository.updateVenda(vendaAtualizada);
     }
-
-//    public void vendasPorVendedor() throws SQLException {
-//        var vendedores = vendedoresRepository.getAllVendedores();
-//
-//        System.out.println("---- Informe o Vendedor ----");
-//
-//
-//
-//
-//    }
 
     public void getRelatorioVendas() throws SQLException {
         System.out.println("---- Relatório de vendas por vendedor ----");
@@ -244,61 +292,6 @@ public class VendasController {
 
     }
 
-//    public void getRelatorioVendasCategoria() throws SQLException{
-//        System.out.println("---- Relatório de vendas por categoria ----");
-//
-//        var categorias = categoriasRepository.getAllCategorias();
-//        if(categorias.isEmpty()){
-//            System.out.println("Nenhuma catehoria cadastrada. Impossível gerar relatório.");
-//            return;
-//        }
-//
-//        System.out.println("Categorias disponíveis:\n");
-//        for (var categoria : categorias) {
-//            System.out.println(categoria.toString());
-//        }
-//
-//        int idCategoria = Input.getInt("Insira o id da categoria a ser consultada:");
-//
-//        Map<String, Integer> relatorio = vendasRepository.getRelatorioVendasCategorias(idCategoria);
-//
-//        if(!relatorio.isEmpty()) {
-//            System.out.println("\n---- Resultado do Relatório ----");
-//            for(Map.Entry<String, Integer> entry : relatorio.entrySet()) {
-//                System.out.println("Categoria: " + entry.getKey());
-//                System.out.println("Total de unidades vendidas: " + entry.getValue());
-//            }
-//            System.out.println("---- Fim do Relatório ----");
-//        } else {
-//            System.out.println("Nenhuma venda encontrada para a cetegoria com ID " + idCategoria);
-//        }
-//    }
-
-
-
-//
-//    public void vendasPorCategoria() throws SQLException {
-//
-//    }
-
-
-//    public void updateVenda() throws SQLException {
-//        System.out.println("---- Atualizando vendas ----");
-//
-//        int id = Input.getInt("Insira o ID do venda a atualizar:");
-//
-//        String nome = Input.getString("Insira o novo nome do venda:");
-//
-//        String endereco = Input.getString("Insira o novo endereco do venda:");
-//
-//        String telefone = Input.getString("Insira o novo telefone do venda:");
-//
-//        String email = Input.getString("Insira o novo email do venda:");
-//
-//        var venda = new Venda(id, nome, endereco, telefone, email);
-//
-//        vendasRepository.updateVenda(venda);
-//    }
 //
 //    public void deleteVenda() throws SQLException {
 //        System.out.println("---- Excluindo venda ----");

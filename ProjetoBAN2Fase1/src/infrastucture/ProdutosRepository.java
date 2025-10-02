@@ -132,6 +132,18 @@ public class ProdutosRepository {
         st.close();
     }
 
+    public void incrementarQuantidade(int id, int quantidade) throws SQLException {
+        PreparedStatement st = connection.prepareStatement(
+            "UPDATE produtos SET quantidade = quantidade + ? WHERE id_produto=?"
+        );
+
+        st.setInt(1, quantidade);
+        st.setInt(2, id);
+
+        st.execute();
+        st.close();
+    }
+
     public ArrayList<Produto> getRelatorioProdutosFornecedor(int id) throws SQLException {
         String sql = "SELECT " +
                 "f.id_fornecedor, " +

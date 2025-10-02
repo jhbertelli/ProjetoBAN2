@@ -207,7 +207,7 @@ public class Main {
                     vendasController.createVenda();
                     break;
                 case 3:
-                    System.out.println("Operação não implementada");
+                    vendasController.updateVenda();
                     break;
                 case 4:
                     System.out.println("Operação não implementada");
