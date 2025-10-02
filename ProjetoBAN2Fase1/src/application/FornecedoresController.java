@@ -32,7 +32,7 @@ public class FornecedoresController {
     public void createFornecedor() throws SQLException {
         System.out.println("---- Adicionando fornecedor ----");
 
-        String nome = Input.getString("Insira o nome do fornecedor:");
+        String nome = Input.getString("Insira o nome (razão social) do fornecedor:");
         String nomeFantasia = Input.getString("Insira o nome fantasia do fornecedor:");
         String endereco = Input.getString("Insira o endereço do fornecedor:");
         String telefone = Input.getString("Insira o telefone do fornecedor:");

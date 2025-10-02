@@ -183,7 +183,7 @@ public class ProdutosController {
             return;
         }
 
-        System.out.println("Fornecedores disponíveis:\n");
+        System.out.println("Fornecedores disponíveis:");
         for (var fornecedor : fornecedores) {
             System.out.println(fornecedor.toString());
         }
@@ -223,7 +223,7 @@ public class ProdutosController {
             return;
         }
 
-        System.out.println("Categorais disponíveis:\n");
+        System.out.println("Categorais disponíveis:");
         for (var categoria : categorias) {
             System.out.println(categoria.toString());
         }

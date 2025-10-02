@@ -162,7 +162,7 @@ public class VendasController {
             return;
         }
 
-        System.out.println("Vendedores disponíveis:\n");
+        System.out.println("Vendedores disponíveis:");
         for (var vendedor : vendedores) {
             System.out.println(vendedor.toString());
         }
@@ -203,7 +203,7 @@ public class VendasController {
             return;
         }
 
-        System.out.println("Categorias disponíveis:\n");
+        System.out.println("Categorias disponíveis:");
         for (var categoria : categorias){
             System.out.println(categoria.toString());
         }

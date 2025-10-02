@@ -77,7 +77,6 @@ public class VendasRepository {
         while (result.next()) {
             var venda = new Venda(result.getInt(1));
 
-            System.out.println("venda: " + venda.getId());
             var nomeVendedor = result.getString(2);
 
             if (nomeVendedor != null) {
@@ -166,22 +165,22 @@ public class VendasRepository {
     }
 
     public ArrayList<Venda> getRelatorioVendasCategoria(int id) throws SQLException {
-        String sql = "SELECT " +
-                "ve.id_vendedor, " +
-                "ve.nome AS vendedor, " +
-                "c.nome AS categoria, " +
-                "v.id_venda, " +
-                "p.id_produto, " +
-                "p.nome AS produto, " +
-                "vp.quantidade_vendida, " +
-                "p.preco " +
-                "FROM vendedores ve " +
-                "JOIN vendas v on ve.id_vendedor=v.id_vendedor " +
-                "JOIN venda_produto vp on v.id_venda=vp.id_venda " +
-                "JOIN produtos p on vp.id_produto=p.id_produto " +
-                "JOIN categorias c on p.id_categoria=c.id_categoria " +
-                "WHERE c.id_categoria = ? " +
-                "ORDER BY v.id_venda";
+        String sql = """
+               SELECT
+               ve.nome AS vendedor,
+               c.nome AS categoria,
+               v.id_venda,
+               p.id_produto,
+               p.nome AS produto,
+               vp.quantidade_vendida,
+               p.preco
+               FROM vendas v
+               LEFT JOIN vendedores ve on ve.id_vendedor=v.id_vendedor
+               JOIN venda_produto vp on v.id_venda=vp.id_venda
+               JOIN produtos p on vp.id_produto=p.id_produto
+               JOIN categorias c on p.id_categoria=c.id_categoria
+               WHERE c.id_categoria = ?
+               ORDER BY v.id_venda""";
 
         ArrayList<Venda> relatorioFinal = new ArrayList<>();
         Venda vendaAtual = null;
@@ -196,9 +195,13 @@ public class VendasRepository {
             if(vendaAtual == null || vendaAtual.getId() != idVendaDaLinha) {
                 vendaAtual = new Venda(idVendaDaLinha);
 
-                int idVendedor = result.getInt("id_vendedor");
                 String nomeVendedor = result.getString("vendedor");
-                vendaAtual.setVendedor(new Vendedor(idVendedor, nomeVendedor, null, null, null));
+
+                if (nomeVendedor != null) {
+                    var vendedor = new Vendedor();
+                    vendedor.setNome(nomeVendedor);
+                    vendaAtual.setVendedor(vendedor);
+                }
 
                 relatorioFinal.add(vendaAtual);
             }
