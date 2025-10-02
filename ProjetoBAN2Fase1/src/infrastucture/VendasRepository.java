@@ -98,7 +98,7 @@ public class VendasRepository {
                 int quantidadeVendida = resultVendaProduto.getInt(1);
                 var produto = new Produto(resultVendaProduto.getInt(4));
                 produto.setNome(resultVendaProduto.getString(2));
-                produto.setPreco(resultVendaProduto.getInt(3));
+                produto.setPreco(resultVendaProduto.getDouble(3));
 
                 venda.adicionarProduto(produto, quantidadeVendida);
             }
