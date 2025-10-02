@@ -115,30 +115,40 @@ public class VendasController {
                 continue;
             }
 
-            var produtosAdicionados = venda.getVendaProdutos()
+            var produtoJaAdicionado = venda
+                .getVendaProdutos()
                 .stream()
-                .filter(x -> x.getProduto().getId() == idProduto)
-                .toList();
+                .anyMatch(x -> x.getProduto() == produto);
 
-            int produtoQuantidadeTotalVendidos = 0;
+            if (produtoJaAdicionado) {
+                int quantidade = Input.getInt("Você já inseriu este produto. Informe a quantidade nova, ou 0 para removê-lo:");
 
-            for (var vendaProduto : produtosAdicionados)
-                produtoQuantidadeTotalVendidos += vendaProduto.getQuantidadeVendida();
-
-            int produtoQuantidadeTotalDisponivel = produto.getQuantidade() - produtoQuantidadeTotalVendidos;
+                if (quantidade == 0)
+                    venda.removerProduto(produto);
+                else {
+                    venda.atualizarProduto(produto, quantidade);
+                    System.out.println("Produto " + idProduto + " atualizado com a quantidade: " + quantidade);
+                }
+                continue;
+            }
 
             int quantidade = Input.getInt("Insira a quantidade vendida, ou 0 para não adicionar este produto:");
 
-            while (quantidade > produtoQuantidadeTotalDisponivel) {
+            while (quantidade > produto.getQuantidade()) {
                 quantidade = Input.getInt("A quantidade inserida é maior que a quantidade existente no estoque. Insira uma quantidade menor, ou 0 para não adicionar este produto:");
             }
 
             if (quantidade == 0) continue;
 
-            produtosRepository.decrementarQuantidade(idProduto, quantidade);
             venda.adicionarProduto(produto, quantidade);
             System.out.println("Produto " + idProduto + " adicionado com a quantidade: " + quantidade);
         }
+
+        for (var vendaProduto : venda.getVendaProdutos())
+            produtosRepository.decrementarQuantidade(
+                vendaProduto.getProduto().getId(),
+                vendaProduto.getQuantidadeVendida()
+            );
 
         vendasRepository.createVenda(venda);
     }

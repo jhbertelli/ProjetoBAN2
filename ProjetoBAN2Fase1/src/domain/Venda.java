@@ -15,6 +15,15 @@ public class Venda {
         vendaProdutos.add(new VendaProduto(this.id, produto, quantidade));
     }
 
+    public void atualizarProduto(Produto produto, int quantidade) {
+        removerProduto(produto);
+        adicionarProduto(produto, quantidade);
+    }
+
+    public void removerProduto(Produto produto) {
+        vendaProdutos.removeIf(x -> x.getProduto() == produto);
+    }
+
     public int getId() {
         return id;
     }
