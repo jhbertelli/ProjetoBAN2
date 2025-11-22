@@ -1,11 +1,7 @@
-import application.*;
-import domain.Produto;
-import domain.Venda;
+import application.VendedoresController;
 import infrastucture.*;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Main {
@@ -22,19 +18,19 @@ public class Main {
         int opcao = 0;
 
         var categoriasRepository = new CategoriasRepository(connection);
-        var categoriasController = new CategoriasController(categoriasRepository);
+        var categoriasController = new application.CategoriasController(categoriasRepository);
 
         var vendedoresRepository = new VendedoresRepository(connection);
-        var vendedoresController = new VendedoresController(vendedoresRepository);
+        var vendedoresController = new application.VendedoresController(vendedoresRepository);
 
         var fornecedoresRepository = new FornecedoresRepository(connection);
-        var fornecedoresController = new FornecedoresController(fornecedoresRepository);
+        var fornecedoresController = new application.FornecedoresController(fornecedoresRepository);
 
         var produtosRepository = new ProdutosRepository(connection);
-        var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
+        var produtosController = new application.ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
 
         var vendasRepository = new VendasRepository(connection);
-        var vendasController = new VendasController(vendasRepository, produtosRepository, vendedoresRepository, categoriasRepository);
+        var vendasController = new application.VendasController(vendasRepository, produtosRepository, vendedoresRepository, categoriasRepository);
 
         while (opcao != QUIT_OPTION) {
             exibirMenuPrincipal();
@@ -70,7 +66,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarCategorias(CategoriasController categoriasController) throws SQLException {
+    private static void gerenciarCategorias(application.CategoriasController categoriasController) throws SQLException {
         int opcao = 0;
         final int opcao_voltar = 5;
 
@@ -99,7 +95,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarFornecedores(FornecedoresController fornecedoresController) throws SQLException {
+    private static void gerenciarFornecedores(application.FornecedoresController fornecedoresController) throws SQLException {
         int opcao = 0;
         final int opcao_voltar = 5;
 
@@ -157,7 +153,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarProdutos(ProdutosController produtosController) throws SQLException {
+    private static void gerenciarProdutos(application.ProdutosController produtosController) throws SQLException {
         int opcao = 0;
         final int opcao_voltar = 7;
 
@@ -191,7 +187,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarVendas(VendasController vendasController) throws SQLException {
+    private static void gerenciarVendas(application.VendasController vendasController) throws SQLException {
         int opcao = 0;
         final int opcao_voltar = 7;
 
