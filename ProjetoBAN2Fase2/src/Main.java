@@ -1,8 +1,7 @@
-import application.*;
-import infrastucture.*;
+import application2.*;
+import infrastructure2.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.net.ConnectException;
 
 public class Main {
     private static final int CATEGORIAS_OPTION = 1;
@@ -12,24 +11,24 @@ public class Main {
     private static final int VENDAS_OPTION = 5;
     private static final int QUIT_OPTION = 6;
 
-    public static void main(String[] args) throws SQLException {
-        Connection connection = new PostgresService().getConnection();
+    public static void main(String[] args) {
+        var database = MongoService.getDatabase();
 
         int opcao = 0;
 
-        var categoriasRepository = new CategoriasRepository(connection);
+        var categoriasRepository = new CategoriasRepository(database);
         var categoriasController = new CategoriasController(categoriasRepository);
 
-        var vendedoresRepository = new VendedoresRepository(connection);
+        var vendedoresRepository = new VendedoresRepository(database);
         var vendedoresController = new VendedoresController(vendedoresRepository);
 
-        var fornecedoresRepository = new FornecedoresRepository(connection);
+        var fornecedoresRepository = new FornecedoresRepository(database);
         var fornecedoresController = new FornecedoresController(fornecedoresRepository);
 
-        var produtosRepository = new ProdutosRepository(connection);
+        var produtosRepository = new ProdutosRepository(database);
         var produtosController = new ProdutosController(produtosRepository, categoriasRepository, fornecedoresRepository);
 
-        var vendasRepository = new VendasRepository(connection);
+        var vendasRepository = new VendasRepository(database);
         var vendasController = new VendasController(vendasRepository, produtosRepository, vendedoresRepository, categoriasRepository);
 
         while (opcao != QUIT_OPTION) {
@@ -37,36 +36,32 @@ public class Main {
 
             opcao = Input.getInt();
 
-            try {
-                switch (opcao) {
-                    case CATEGORIAS_OPTION:
-                        gerenciarCategorias(categoriasController);
-                        break;
-                    case FORNECEDORES_OPTION:
-                        gerenciarFornecedores(fornecedoresController);
-                        break;
-                    case VENDEDORES_OPTION:
-                        gerenciarVendedores(vendedoresController);
-                        break;
-                    case PRODUTOS_OPTION:
-                        gerenciarProdutos(produtosController);
-                        break;
-                    case VENDAS_OPTION:
-                        gerenciarVendas(vendasController);
-                        break;
-                    case QUIT_OPTION:
-                        break;
-                    default:
-                        System.out.println("Opção inválida");
-                        break;
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            switch (opcao) {
+                case CATEGORIAS_OPTION:
+                    gerenciarCategorias(categoriasController);
+                    break;
+                case FORNECEDORES_OPTION:
+                    gerenciarFornecedores(fornecedoresController);
+                    break;
+                case VENDEDORES_OPTION:
+                    gerenciarVendedores(vendedoresController);
+                    break;
+                case PRODUTOS_OPTION:
+                    gerenciarProdutos(produtosController);
+                    break;
+                case VENDAS_OPTION:
+                    gerenciarVendas(vendasController);
+                    break;
+                case QUIT_OPTION:
+                    break;
+                default:
+                    System.out.println("Opção inválida");
+                    break;
             }
         }
     }
 
-    private static void gerenciarCategorias(CategoriasController categoriasController) throws SQLException {
+    private static void gerenciarCategorias(CategoriasController categoriasController) {
         int opcao = 0;
         final int opcao_voltar = 5;
 
@@ -95,7 +90,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarFornecedores(FornecedoresController fornecedoresController) throws SQLException {
+    private static void gerenciarFornecedores(FornecedoresController fornecedoresController) {
         int opcao = 0;
         final int opcao_voltar = 5;
 
@@ -124,7 +119,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarVendedores(VendedoresController vendedoresController) throws SQLException {
+    private static void gerenciarVendedores(VendedoresController vendedoresController) {
         int opcao = 0;
         final int opcao_voltar = 5;
 
@@ -153,7 +148,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarProdutos(ProdutosController produtosController) throws SQLException {
+    private static void gerenciarProdutos(ProdutosController produtosController) {
         int opcao = 0;
         final int opcao_voltar = 7;
 
@@ -187,7 +182,7 @@ public class Main {
         }
     }
 
-    private static void gerenciarVendas(VendasController vendasController) throws SQLException {
+    private static void gerenciarVendas(VendasController vendasController) {
         int opcao = 0;
         final int opcao_voltar = 7;
 

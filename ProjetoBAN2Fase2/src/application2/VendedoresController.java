@@ -1,10 +1,9 @@
 package application2;
 
-import domain.Vendedor;
-import infrastucture.Input;
-import infrastucture.VendedoresRepository;
+import domain2.Vendedor;
+import infrastructure2.Input;
+import infrastructure2.VendedoresRepository;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class VendedoresController {
@@ -14,7 +13,7 @@ public class VendedoresController {
         this.vendedoresRepository = vendedoresRepository;
     }
 
-    public void getAllVendedores() throws SQLException {
+    public void getAllVendedores() {
         var vendedores = vendedoresRepository.getAllVendedores();
 
         System.out.println("---- Listando vendedores ----");
@@ -29,7 +28,7 @@ public class VendedoresController {
         }
     }
 
-    public void createVendedor() throws SQLException {
+    public void createVendedor() {
         System.out.println("---- Adicionando vendedor ----");
 
         String nome = Input.getString("Insira o nome do vendedor:");
@@ -45,7 +44,7 @@ public class VendedoresController {
         vendedoresRepository.createVendedor(vendedor);
     }
 
-    public void updateVendedor() throws SQLException {
+    public void updateVendedor() {
         System.out.println("---- Atualizando vendedor ----");
 
         var vendedores = vendedoresRepository.getAllVendedores();
@@ -70,7 +69,7 @@ public class VendedoresController {
         vendedoresRepository.updateVendedor(vendedor);
     }
 
-    public void deleteVendedor() throws SQLException {
+    public void deleteVendedor() {
         System.out.println("---- Excluindo vendedor ----");
 
         var vendedores = vendedoresRepository.getAllVendedores();

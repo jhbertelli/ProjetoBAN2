@@ -1,10 +1,9 @@
 package application2;
 
-import domain.Fornecedor;
-import infrastucture.FornecedoresRepository;
-import infrastucture.Input;
+import domain2.Fornecedor;
+import infrastructure2.FornecedoresRepository;
+import infrastructure2.Input;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FornecedoresController {
@@ -14,7 +13,7 @@ public class FornecedoresController {
         this.fornecedoresRepository = fornecedoresRepository;
     }
 
-    public void getAllFornecedores() throws SQLException {
+    public void getAllFornecedores() {
         var fornecedores = fornecedoresRepository.getAllFornecedores();
 
         System.out.println(("---- Listando Fornecedores ----"));
@@ -29,7 +28,7 @@ public class FornecedoresController {
         }
     }
 
-    public void createFornecedor() throws SQLException {
+    public void createFornecedor() {
         System.out.println("---- Adicionando fornecedor ----");
 
         String nome = Input.getString("Insira o nome (razão social) do fornecedor:");
@@ -44,7 +43,7 @@ public class FornecedoresController {
         fornecedoresRepository.createFornecedor(fornecedor);
     }
 
-    public void updateFornecedor() throws SQLException {
+    public void updateFornecedor() {
         System.out.println("---- Atualizando fornecedores ----");
 
         var fornecedores = fornecedoresRepository.getAllFornecedores();
@@ -68,7 +67,7 @@ public class FornecedoresController {
         fornecedoresRepository.updateFornecedor(fornecedor);
     }
 
-    public void deleteFornecedor() throws SQLException {
+    public void deleteFornecedor() {
         System.out.println("---- Excluindo fornecedor ----");
 
         var fornecedores = fornecedoresRepository.getAllFornecedores();

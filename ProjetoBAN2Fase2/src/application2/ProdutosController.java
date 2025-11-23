@@ -1,15 +1,14 @@
 package application2;
 
-import domain.Categoria;
-import domain.Fornecedor;
-import domain.Produto;
-import infrastucture.CategoriasRepository;
-import infrastucture.FornecedoresRepository;
-import infrastucture.Input;
-import infrastucture.ProdutosRepository;
+import domain2.Categoria;
+import domain2.Fornecedor;
+import domain2.Produto;
+import infrastructure2.CategoriasRepository;
+import infrastructure2.FornecedoresRepository;
+import infrastructure2.Input;
+import infrastructure2.ProdutosRepository;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ProdutosController {
@@ -23,7 +22,7 @@ public class ProdutosController {
         this.fornecedoresRepository = fornecedoresRepository;
     }
 
-    public void getAllProdutos() throws SQLException {
+    public void getAllProdutos() {
         var produtos = produtosRepository.getAllProdutos();
 
         System.out.println("---- Listando produtos ----");
@@ -38,7 +37,7 @@ public class ProdutosController {
         }
     }
 
-    public void createProduto() throws SQLException {
+    public void createProduto() {
         System.out.println("---- Adicionando produto ----");
 
         var categorias = categoriasRepository.getAllCategorias();
@@ -108,7 +107,7 @@ public class ProdutosController {
         produtosRepository.createProduto(produto);
     }
 
-    public void updateProduto() throws SQLException {
+    public void updateProduto() {
         System.out.println("---- Atualizando produtos ----");
 
         var produtos = produtosRepository.getAllProdutos();
@@ -138,7 +137,7 @@ public class ProdutosController {
         produtosRepository.updateProduto(produto);
     }
 
-    public void deleteProduto() throws SQLException {
+    public void deleteProduto() {
         System.out.println("---- Excluindo produto ----");
 
         var produtos = produtosRepository.getAllProdutos();
@@ -174,7 +173,7 @@ public class ProdutosController {
         }
     }
 
-    public void getRelatorioProdutosFornecedor() throws SQLException {
+    public void getRelatorioProdutosFornecedor() {
         System.out.println("---- Relatório de Produtos por Fornecedor ----");
 
         var fornecedores = fornecedoresRepository.getAllFornecedores();
@@ -214,7 +213,7 @@ public class ProdutosController {
 
     }
 
-    public void getRelatorioProdutosCategoria() throws SQLException {
+    public void getRelatorioProdutosCategoria() {
         System.out.println("---- Relatório de Produtos por Categoria ----");
 
         var categorias = categoriasRepository.getAllCategorias();

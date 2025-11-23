@@ -1,12 +1,11 @@
 package application2;
 
-import domain.Categoria;
-import domain.Produto;
-import domain.Venda;
-import domain.Vendedor;
-import infrastucture.*;
+import domain2.Categoria;
+import domain2.Produto;
+import domain2.Venda;
+import domain2.Vendedor;
+import infrastructure2.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class VendasController {
@@ -22,7 +21,7 @@ public class VendasController {
         this.categoriasRepository = categoriasRepository;
     }
 
-    public void getAllVendas() throws SQLException {
+    public void getAllVendas() {
         var vendas = vendasRepository.getAllVendas();
 
         System.out.println("---- Listando vendas ----");
@@ -37,7 +36,7 @@ public class VendasController {
         }
     }
 
-    public void createVenda() throws SQLException {
+    public void createVenda() {
         var produtos = produtosRepository.getAllProdutos();
 
         if (produtos.isEmpty()) {
@@ -159,7 +158,7 @@ public class VendasController {
         return idVendedor > 0 ? new Vendedor(idVendedor) : null;
     }
 
-    public void updateVenda() throws SQLException {
+    public void updateVenda() {
         System.out.println("---- Atualizando venda ----");
 
         var vendas = vendasRepository.getAllVendas();
@@ -211,7 +210,7 @@ public class VendasController {
         vendasRepository.updateVenda(vendaAtualizada);
     }
 
-    public void getRelatorioVendas() throws SQLException {
+    public void getRelatorioVendas() {
         System.out.println("---- Relatório de vendas por vendedor ----");
 
         var vendedores = vendedoresRepository.getAllVendedores();
@@ -252,7 +251,7 @@ public class VendasController {
 
     }
 
-    public void getRelatorioVendasCategoria() throws SQLException {
+    public void getRelatorioVendasCategoria() {
         System.out.println("---- Relatório de vendas por categoria ----");
 
         var categorias = categoriasRepository.getAllCategorias();
@@ -292,7 +291,7 @@ public class VendasController {
 
     }
 
-    public void deleteVenda() throws SQLException {
+    public void deleteVenda() {
         System.out.println("---- Excluindo venda ----");
 
         var vendas = vendasRepository.getAllVendas();

@@ -1,10 +1,9 @@
 package application2;
 
-import domain.Categoria;
-import infrastucture.CategoriasRepository;
-import infrastucture.Input;
+import domain2.Categoria;
+import infrastructure2.CategoriasRepository;
+import infrastructure2.Input;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CategoriasController {
@@ -14,7 +13,7 @@ public class CategoriasController {
         this.categoriasRepository = categoriasRepository;
     }
 
-    public void getAllCategorias() throws SQLException {
+    public void getAllCategorias() {
         var categorias = categoriasRepository.getAllCategorias();
 
         System.out.println("---- Listando categorias ----");
@@ -29,7 +28,7 @@ public class CategoriasController {
         }
     }
 
-    public void createCategoria() throws SQLException {
+    public void createCategoria() {
         System.out.println("---- Adicionando categoria ----");
 
         String nome = Input.getString("Insira o nome da categoria:");
@@ -39,7 +38,7 @@ public class CategoriasController {
         categoriasRepository.createCategoria(categoria);
     }
 
-    public void updateCategoria() throws SQLException {
+    public void updateCategoria() {
         System.out.println("---- Atualizando categorias ----");
 
         var categorias = categoriasRepository.getAllCategorias();
@@ -58,7 +57,7 @@ public class CategoriasController {
         categoriasRepository.updateCategoria(categoria);
     }
 
-    public void deleteCategoria() throws SQLException {
+    public void deleteCategoria() {
         System.out.println("---- Excluindo categoria ----");
 
         var categorias = categoriasRepository.getAllCategorias();

@@ -1,4 +1,4 @@
-package infrastucture2;
+package infrastructure2;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

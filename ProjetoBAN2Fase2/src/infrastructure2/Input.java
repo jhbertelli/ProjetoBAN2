@@ -1,4 +1,4 @@
-package infrastucture2;
+package infrastructure2;
 
 import java.sql.Date;
 import java.text.ParseException;
