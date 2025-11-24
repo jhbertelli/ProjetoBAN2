@@ -1,5 +1,6 @@
 package infrastructure2;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import domain2.Categoria;
 
@@ -7,21 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CategoriasRepository {
-    private final MongoDatabase database;
+    private final MongoCollection<Categoria> categoriasCollection;
 
     public CategoriasRepository(MongoDatabase database) {
-        this.database = database;
+        categoriasCollection = database.getCollection("categorias", Categoria.class);
     }
 
     public void createCategoria(Categoria categoria) {
-//        PreparedStatement st = connection.prepareStatement(
-//            "INSERT INTO categorias (nome) VALUES (?)"
-//        );
-//
-//        st.setString(1, categoria.getNome());
-//
-//        st.execute();
-//        st.close();
+        categoriasCollection.insertOne(categoria);
     }
 
     public void deleteCategoria(int id) {

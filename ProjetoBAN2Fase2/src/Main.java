@@ -1,4 +1,5 @@
 import application2.*;
+import com.mongodb.MongoCommandException;
 import infrastructure2.*;
 
 import java.net.ConnectException;
@@ -12,7 +13,7 @@ public class Main {
     private static final int QUIT_OPTION = 6;
 
     public static void main(String[] args) {
-        var database = MongoService.getDatabase();
+        var database = new MongoService().getDatabase();
 
         int opcao = 0;
 
@@ -36,27 +37,31 @@ public class Main {
 
             opcao = Input.getInt();
 
-            switch (opcao) {
-                case CATEGORIAS_OPTION:
-                    gerenciarCategorias(categoriasController);
-                    break;
-                case FORNECEDORES_OPTION:
-                    gerenciarFornecedores(fornecedoresController);
-                    break;
-                case VENDEDORES_OPTION:
-                    gerenciarVendedores(vendedoresController);
-                    break;
-                case PRODUTOS_OPTION:
-                    gerenciarProdutos(produtosController);
-                    break;
-                case VENDAS_OPTION:
-                    gerenciarVendas(vendasController);
-                    break;
-                case QUIT_OPTION:
-                    break;
-                default:
-                    System.out.println("Opção inválida");
-                    break;
+            try {
+                switch (opcao) {
+                    case CATEGORIAS_OPTION:
+                        gerenciarCategorias(categoriasController);
+                        break;
+                    case FORNECEDORES_OPTION:
+                        gerenciarFornecedores(fornecedoresController);
+                        break;
+                    case VENDEDORES_OPTION:
+                        gerenciarVendedores(vendedoresController);
+                        break;
+                    case PRODUTOS_OPTION:
+                        gerenciarProdutos(produtosController);
+                        break;
+                    case VENDAS_OPTION:
+                        gerenciarVendas(vendasController);
+                        break;
+                    case QUIT_OPTION:
+                        break;
+                    default:
+                        System.out.println("Opção inválida");
+                        break;
+                }
+            } catch (MongoCommandException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
