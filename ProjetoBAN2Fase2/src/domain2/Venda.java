@@ -3,9 +3,12 @@ package domain2;
 import java.util.ArrayList;
 
 public class Venda {
-    private final int id;
-    private final ArrayList<VendaProduto> vendaProdutos = new ArrayList<>();
+    private int id;
+    private ArrayList<VendaProduto> vendaProdutos = new ArrayList<>();
     private Vendedor vendedor;
+
+    public Venda() {
+    }
 
     public Venda(int id) {
         this.id = id;
@@ -28,8 +31,16 @@ public class Venda {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public ArrayList<VendaProduto> getVendaProdutos() {
         return vendaProdutos;
+    }
+
+    public void setVendaProdutos(ArrayList<VendaProduto> vendaProdutos) {
+        this.vendaProdutos = vendaProdutos;
     }
 
     public Vendedor getVendedor() {

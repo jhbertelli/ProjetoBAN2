@@ -40,9 +40,6 @@ public class FornecedoresController {
 
         int novoId = fornecedoresRepository.getHighestId() + 1;
 
-
-
-
         fornecedoresRepository.createFornecedor(new Fornecedor(
                 novoId,
                 endereco,

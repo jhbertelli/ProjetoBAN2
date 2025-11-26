@@ -50,7 +50,7 @@ public class VendasController {
 
         Vendedor vendedor = findVendedorFromLista(vendedores);
 
-        int proximoIdVenda = vendasRepository.getProximoIdVenda();
+        int proximoIdVenda = vendasRepository.getProximoIdVenda() + 1;
 
         var venda = criarVenda(proximoIdVenda, vendedor, produtos);
 
@@ -127,35 +127,63 @@ public class VendasController {
     }
 
     private static Vendedor findVendedorFromLista(ArrayList<Vendedor> vendedores) {
-        int idVendedor = 0;
-
-        if (!vendedores.isEmpty()) {
-            System.out.println("Listando vendedores:");
-
-            for (var vendedor : vendedores) {
-                System.out.println(vendedor.toString());
-            }
-
-            idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
-
-            while (idVendedor > 0) {
-                int finalIdVendedor = idVendedor;
-
-                var vendedorEncontrado = vendedores
-                    .stream()
-                    .anyMatch(x -> x.getId() == finalIdVendedor);
-
-                if (!vendedorEncontrado) {
-                    idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
-                } else {
-                    break;
-                }
-            }
-        } else {
+        if (vendedores.isEmpty()) {
             System.out.println("Nenhum vendedor encontrado, prosseguindo para adição de produtos na venda");
+            return null;
         }
 
-        return idVendedor > 0 ? new Vendedor(idVendedor) : null;
+        System.out.println("Listando vendedores:");
+        for (var vendedor : vendedores) {
+            System.out.println(vendedor.toString());
+        }
+
+        int idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+
+        while (idVendedor > 0) {
+            int finalIdVendedor = idVendedor;
+
+            Vendedor vendedorEncontrado = vendedores.stream()
+                    .filter(x -> x.getId() == finalIdVendedor)
+                    .findFirst()
+                    .orElse(null);
+
+            if (vendedorEncontrado != null) {
+                return vendedorEncontrado;
+            }
+            idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID correto ou 0 para sair:");
+        }
+
+        return null;
+
+//        int idVendedor = 0;
+//
+//        if (!vendedores.isEmpty()) {
+//            System.out.println("Listando vendedores:");
+//
+//            for (var vendedor : vendedores) {
+//                System.out.println(vendedor.toString());
+//            }
+//
+//            idVendedor = Input.getInt("Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+//
+//            while (idVendedor > 0) {
+//                int finalIdVendedor = idVendedor;
+//
+//                var vendedorEncontrado = vendedores
+//                    .stream()
+//                    .anyMatch(x -> x.getId() == finalIdVendedor);
+//
+//                if (!vendedorEncontrado) {
+//                    idVendedor = Input.getInt("Vendedor não encontrado. Insira o ID do vendedor que atendeu a venda, ou 0 caso não haja:");
+//                } else {
+//                    break;
+//                }
+//            }
+//        } else {
+//            System.out.println("Nenhum vendedor encontrado, prosseguindo para adição de produtos na venda");
+//        }
+//
+//        return idVendedor > 0 ? new Vendedor(idVendedor) : null;
     }
 
     public void updateVenda() {
