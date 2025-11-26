@@ -33,9 +33,9 @@ public class CategoriasController {
 
         String nome = Input.getString("Insira o nome da categoria:");
 
-        var categoria = new Categoria(nome);
+        int novoId = categoriasRepository.getHighestId() + 1;
 
-        categoriasRepository.createCategoria(categoria);
+        categoriasRepository.createCategoria(new Categoria(novoId, nome));
     }
 
     public void updateCategoria() {
