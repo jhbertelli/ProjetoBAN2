@@ -1,15 +1,17 @@
 package domain2;
 
+import application2.VendedoresController;
+
 public class Vendedor {
-    private final int id;
+    private int id;
     private String nome;
     private String endereco;
     private String telefone;
     private String email;
 
     public Vendedor() {
-        this.id = 0;
     }
+
 
     public Vendedor(int id) {
         this.id = id;
@@ -29,6 +31,10 @@ public class Vendedor {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

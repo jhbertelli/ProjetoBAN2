@@ -166,6 +166,11 @@ public class ProdutosController {
         int idCatFinal = original.getIdCategoria();
         String nomeCatFinal = original.getNomeCategoria();
 
+        System.out.println("--- Categorias Disponíveis ---");
+        for (var categoria : categorias) {
+            System.out.println(categoria.toString());
+        }
+
         String idCatInput = Input.getString("ID Categoria (" + original.getIdCategoria() + " - " + original.getNomeCategoria() + "):");
 
         if (!idCatInput.isEmpty()) {
@@ -185,6 +190,11 @@ public class ProdutosController {
 
         int idFornFinal = original.getIdFornecedor();
         String nomeFornFinal = original.getNomeFornecedor();
+
+        System.out.println("--- Fornecedores Disponíveis ---");
+        for (var fornecedor : fornecedores) {
+            System.out.println(fornecedor.toString());
+        }
 
         String idFornInput = Input.getString("ID Fornecedor (" + original.getIdFornecedor() + " - " + original.getNomeFornecedor() + "):");
 

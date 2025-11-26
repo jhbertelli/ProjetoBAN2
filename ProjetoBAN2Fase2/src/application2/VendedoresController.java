@@ -32,14 +32,14 @@ public class VendedoresController {
         System.out.println("---- Adicionando vendedor ----");
 
         String nome = Input.getString("Insira o nome do vendedor:");
-
         String endereco = Input.getString("Insira o endereco do vendedor:");
-
         String telefone = Input.getString("Insira o telefone do vendedor:");
-
         String email = Input.getString("Insira o email do vendedor:");
 
+        int novoId = vendedoresRepository.getHighestId() + 1;
+
         var vendedor = new Vendedor(nome, endereco, telefone, email);
+        vendedor.setId(novoId);
 
         vendedoresRepository.createVendedor(vendedor);
     }
@@ -56,15 +56,28 @@ public class VendedoresController {
 
         int id = getIdVendedorDaLista(vendedores, "Insira o ID do vendedor a atualizar:");
 
-        String nome = Input.getString("Insira o novo nome do vendedor:");
+        Vendedor original = vendedores.stream()
+                .filter(v -> v.getId() == id)
+                .findFirst()
+                .orElse(null);
 
-        String endereco = Input.getString("Insira o novo endereco do vendedor:");
+        if (original == null) return;
 
-        String telefone = Input.getString("Insira o novo telefone do vendedor:");
+        System.out.println("Pressione ENTER para manter o valor atual mostrado entre (parênteses).");
 
-        String email = Input.getString("Insira o novo email do vendedor:");
+        String inputNome = Input.getString("Nome (" + original.getNome() + "):");
+        String nomeFinal = inputNome.isEmpty() ? original.getNome() : inputNome;
 
-        var vendedor = new Vendedor(id, nome, endereco, telefone, email);
+        String inputEndereco = Input.getString("Endereço (" + original.getEndereco() + "):");
+        String enderecoFinal = inputEndereco.isEmpty() ? original.getEndereco() : inputEndereco;
+
+        String inputTelefone = Input.getString("Telefone (" + original.getTelefone() + "):");
+        String telefoneFinal = inputTelefone.isEmpty() ? original.getTelefone() : inputTelefone;
+
+        String inputEmail = Input.getString("Email (" + original.getEmail() + "):");
+        String emailFinal = inputEmail.isEmpty() ? original.getEmail() : inputEmail;
+
+        var vendedor = new Vendedor(id, nomeFinal, enderecoFinal, telefoneFinal, emailFinal);
 
         vendedoresRepository.updateVendedor(vendedor);
     }
