@@ -24,14 +24,6 @@ public class CategoriasRepository {
     public void deleteCategoria(int id) {
         Bson filter = Filters.eq("_id", id);
         categoriasCollection.deleteOne(filter);
-//        PreparedStatement st = connection.prepareStatement(
-//            "DELETE FROM categorias where id_categoria = ?"
-//        );
-//
-//        st.setInt(1, id);
-//
-//        st.execute();
-//        st.close();
     }
 
     public ArrayList<Categoria> getById(int id) {
@@ -41,34 +33,11 @@ public class CategoriasRepository {
 
     public ArrayList<Categoria> getAllCategorias() {
         return categoriasCollection.find().into(new ArrayList<>());
-//        Statement st = connection.createStatement();
-//        ArrayList<Categoria> categorias = new ArrayList<>();
-//
-//        ResultSet result = st.executeQuery(
-//            "SELECT * FROM categorias ORDER BY id_categoria"
-//        );
-//
-//        while (result.next()) {
-//            categorias.add(
-//                new Categoria(result.getInt(1), result.getString(2))
-//            );
-//        }
-//
-//        return categorias;
     }
 
     public void updateCategoria(Categoria categoria) {
         Bson filter = Filters.eq("_id", categoria.getId());
         categoriasCollection.replaceOne(filter, categoria);
-//        PreparedStatement st = connection.prepareStatement(
-//            "UPDATE categorias SET nome=? WHERE id_categoria=?"
-//        );
-//
-//        st.setString(1, categoria.getNome());
-//        st.setInt(2, categoria.getId());
-//
-//        st.execute();
-//        st.close();
     }
 
     public int getHighestId() {
@@ -78,9 +47,6 @@ public class CategoriasRepository {
                 .limit(1)
                 .first();
 
-        if ( categoriaMaiorID == null) {
-            return 0;
-        }
-        return categoriaMaiorID.getId();
+        return categoriaMaiorID == null ? 0 : categoriaMaiorID.getId();
     }
 }

@@ -46,21 +46,6 @@ public class FornecedoresRepository {
         );
 
         fornecedoresCollection.updateOne(filter, updates);
-//        fornecedoresCollection.replaceOne(filter, fornecedor);
-//        PreparedStatement st = connection.prepareStatement(
-//            "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=? WHERE id_fornecedor=?"
-//        );
-//
-//        st.setString(1, fornecedor.getEndereco());
-//        st.setString(2, fornecedor.getTelefone());
-//        st.setString(3, fornecedor.getNome());
-//        st.setString(4, fornecedor.getNomeFantasia());
-//        st.setString(5, fornecedor.getDocumento());
-//        st.setString(6, fornecedor.getEmail());
-//        st.setInt(7, fornecedor.getId());
-//
-//        st.execute();
-//        st.close();
     }
 
     public int getHighestId() {
@@ -70,10 +55,7 @@ public class FornecedoresRepository {
                 .limit(1)
                 .first();
 
-        if ( fornecedorMaiorID == null) {
-            return 0;
-        }
-        return fornecedorMaiorID.getId();
+        return fornecedorMaiorID == null ? 0 : fornecedorMaiorID.getId();
     }
 
 }

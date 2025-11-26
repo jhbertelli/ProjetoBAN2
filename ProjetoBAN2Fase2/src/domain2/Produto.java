@@ -1,24 +1,23 @@
 package domain2;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Produto {
-    private final int id;
+    private int id;
     private int idCategoria;
     private int idFornecedor;
     private String nome;
     private double preco;
     private int tempoGarantia;
-    private Date dataRecebimento;
+    private String dataRecebimento;
     private int quantidade;
     private String nomeCategoria;
     private String nomeFornecedor;
 
     public Produto() {
-        this.id = 0;
     }
 
-    public Produto(int id, String nome, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
+    public Produto(int id, String nome, double preco, int tempoGarantia, String dataRecebimento, int quantidade) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
@@ -31,7 +30,7 @@ public class Produto {
         this.id = id;
     }
 
-    public Produto(int id, String nome, int idCategoria, String nomeCategoria, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
+    public Produto(int id, String nome, int idCategoria, String nomeCategoria, double preco, int tempoGarantia, String dataRecebimento, int quantidade) {
         this.id = id;
         this.nome = nome;
         this.idCategoria = idCategoria;
@@ -42,12 +41,16 @@ public class Produto {
         this.quantidade = quantidade;
     }
 
-    public Produto(String nome, double preco, int tempoGarantia, Date dataRecebimento, int quantidade) {
+    public Produto(String nome, double preco, int tempoGarantia, String dataRecebimento, int quantidade) {
         this(0, nome, preco, tempoGarantia, dataRecebimento, quantidade);
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getIdFornecedor() {
@@ -106,11 +109,11 @@ public class Produto {
         this.tempoGarantia = tempoGarantia;
     }
 
-    public Date getDataRecebimento() {
+    public String getDataRecebimento() {
         return dataRecebimento;
     }
 
-    public void setDataRecebimento(Date dataRecebimento) {
+    public void setDataRecebimento(String dataRecebimento) {
         this.dataRecebimento = dataRecebimento;
     }
 

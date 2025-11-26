@@ -9,6 +9,7 @@ import infrastructure2.Input;
 import infrastructure2.ProdutosRepository;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ProdutosController {
@@ -41,14 +42,13 @@ public class ProdutosController {
         System.out.println("---- Adicionando produto ----");
 
         var categorias = categoriasRepository.getAllCategorias();
-
         if (categorias.isEmpty()) {
             System.out.println("Erro: nenhuma categoria encontrada! Para criar um produto, crie uma categoria primeiro.");
             return;
         }
 
-        var fornecedores = fornecedoresRepository.getAllFornecedores();
 
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
         if (fornecedores.isEmpty()) {
             System.out.println("Erro: nenhum fornecedor encontrado! Para criar um produto, crie um fornecedor primeiro.");
             return;
@@ -58,13 +58,19 @@ public class ProdutosController {
         double preco = Input.getDouble("Insira o preço do produto:");
         int quantidade = Input.getInt("Insira a quantidade em estoque:");
         int tempoGarantia = Input.getInt("Insira o tempo de garantia (em meses):");
-        Date dataRecebimento = Input.getDate("Insira a data de recebimento (formato YYYY-MM-DD):");
 
+        Date dataNFormatada = Input.getDate("Insira a data de recebimento (formato YYYY-MM-DD):");
+        SimpleDateFormat formatar = new SimpleDateFormat("yyyy-mm-dd");
+        String dataFormatada = formatar.format(dataNFormatada);
+
+        int novoId = produtosRepository.getHighestId() + 1;
+
+        var produto = new Produto(novoId, nome, preco, tempoGarantia, dataFormatada, quantidade);
+
+        System.out.println("--- Categorias Disponíveis ---");
         for (var categoria : categorias) {
             System.out.println(categoria.toString());
         }
-
-        var produto = new Produto(nome, preco, tempoGarantia, dataRecebimento, quantidade);
 
         while (true) {
             int idCategoria = Input.getInt("Insira o ID da categoria do produto:");
@@ -79,10 +85,12 @@ public class ProdutosController {
                 continue;
             }
             produto.setIdCategoria(idCategoria);
+            produto.setNomeCategoria(categoria.getNome());
 
             break;
         }
 
+        System.out.println("--- Fornecedores Disponíveis ---");
         for (var fornecedor : fornecedores) {
             System.out.println(fornecedor.toString());
         }
@@ -99,7 +107,9 @@ public class ProdutosController {
                 System.out.println("Fornecedor " + idFornecedor + " não encontrado, tente outro.");
                 continue;
             }
+
             produto.setIdFornecedor(idFornecedor);
+            produto.setNomeFornecedor(fornecedor.getNome());
 
             break;
         }
@@ -111,6 +121,8 @@ public class ProdutosController {
         System.out.println("---- Atualizando produtos ----");
 
         var produtos = produtosRepository.getAllProdutos();
+        var categorias = categoriasRepository.getAllCategorias();
+        var fornecedores = fornecedoresRepository.getAllFornecedores();
 
         if (produtos.isEmpty()) {
             System.out.println("Erro: nenhum produto encontrado! Para atualizar um produto, crie um primeiro.");
@@ -119,22 +131,88 @@ public class ProdutosController {
 
         int id = getIdProdutoDaLista(produtos, "Insira o ID do produto a atualizar:");
 
-        String nome = Input.getString("Insira o novo nome do produto:");
-        double preco = Input.getDouble("Insira o novo preço do produto:");
-        int quantidade = Input.getInt("Insira a nova quantidade em estoque:");
-        int tempoGarantia = Input.getInt("Insira o novo tempo de garantia (em meses):");
-        Date dataRecebimento = Input.getDate("Insira a nova data de recebimento (formato YYYY-MM-DD):");
+        Produto original = produtos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
 
-        // aqui não precisa verificar se há categoria ou fornecedor porque
-        // nenhuma categoria ou fornecedor pode ser excluído/a se houver um produto atrelado
-        int idCategoria = Input.getInt("Insira o novo ID da Categoria:");
-        int idFornecedor = Input.getInt("Insira o novo ID do Fornecedor:");
+        if(original == null ) return;
 
-        var produto = new Produto(id, nome, preco, tempoGarantia, dataRecebimento, quantidade);
-        produto.setIdCategoria(idCategoria);
-        produto.setIdFornecedor(idFornecedor);
+        System.out.println("Pressione ENTER para manter o valor atual mostrado entre (parênteses).");
 
-        produtosRepository.updateProduto(produto);
+        String inputNome = Input.getString("Nome (" + original.getNome() + "):");
+        String nomeFinal = inputNome.isEmpty() ? original.getNome() : inputNome;
+
+        String inputPreco = Input.getString("Preco (" + original.getPreco() + "):");
+        double precoFinal = inputPreco.isEmpty() ? original.getPreco() : Double.parseDouble(inputPreco);
+
+        String inputQuantidade = Input.getString("Quantidade (" + original.getQuantidade() + "):");
+        int quantidadeFinal = inputQuantidade.isEmpty() ? original.getQuantidade() : Integer.parseInt(inputQuantidade);
+
+        String inputTempoGarantia = Input.getString("Tempo de garantia (em meses) (" + original.getTempoGarantia() + "):");
+        int tempoGarantiaFinal = inputTempoGarantia.isEmpty() ? original.getTempoGarantia() : Integer.parseInt(inputTempoGarantia);
+
+        String inputDataRecebimento = Input.getString("Insira a nova data de recebimento (formato YYYY-MM-DD):");
+        String dataFinal = inputDataRecebimento.isEmpty() ? original.getDataRecebimento() : inputDataRecebimento;
+
+        if (!inputDataRecebimento.isEmpty()) {
+            try {
+                dataFinal = inputDataRecebimento;
+            } catch (Exception e) {
+                System.out.println("Formato de data inválido, mantendo a original.");
+            }
+        }
+
+        int idCatFinal = original.getIdCategoria();
+        String nomeCatFinal = original.getNomeCategoria();
+
+        String idCatInput = Input.getString("ID Categoria (" + original.getIdCategoria() + " - " + original.getNomeCategoria() + "):");
+
+        if (!idCatInput.isEmpty()) {
+            int idDigitado = Integer.parseInt(idCatInput);
+            var novaCat = categorias.stream()
+                    .filter(c -> c.getId() == idDigitado)
+                    .findFirst()
+                    .orElse(null);
+
+            if (novaCat != null) {
+                idCatFinal = novaCat.getId();
+                nomeCatFinal = novaCat.getNome();
+            } else {
+                System.out.println("Categoria nova não encontrada. Mantendo a antiga.");
+            }
+        }
+
+        int idFornFinal = original.getIdFornecedor();
+        String nomeFornFinal = original.getNomeFornecedor();
+
+        String idFornInput = Input.getString("ID Fornecedor (" + original.getIdFornecedor() + " - " + original.getNomeFornecedor() + "):");
+
+        if (!idFornInput.isEmpty()) {
+            int idDigitado = Integer.parseInt(idFornInput);
+            // Busca o novo fornecedor na lista
+            var novoForn = fornecedores.stream()
+                    .filter(f -> f.getId() == idDigitado)
+                    .findFirst()
+                    .orElse(null);
+
+            if (novoForn != null) {
+                idFornFinal = novoForn.getId();
+                nomeFornFinal = novoForn.getNome();
+            } else {
+                System.out.println("Fornecedor novo não encontrado. Mantendo o antigo.");
+            }
+        }
+
+        Produto produtoAtualizado = new Produto(id, nomeFinal, precoFinal, tempoGarantiaFinal, dataFinal, quantidadeFinal);
+
+        produtoAtualizado.setIdCategoria(idCatFinal);
+        produtoAtualizado.setNomeCategoria(nomeCatFinal);
+
+        produtoAtualizado.setIdFornecedor(idFornFinal);
+        produtoAtualizado.setNomeFornecedor(nomeFornFinal);
+
+        produtosRepository.updateProduto(produtoAtualizado);
     }
 
     public void deleteProduto() {
