@@ -1,8 +1,11 @@
 package domain2;
 
 public class Categoria {
-    private final int id;
+    private int id;
     private String nome;
+
+    public Categoria() {
+    }
 
     public Categoria(String nome) {
         this(0, nome);
@@ -15,6 +18,10 @@ public class Categoria {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

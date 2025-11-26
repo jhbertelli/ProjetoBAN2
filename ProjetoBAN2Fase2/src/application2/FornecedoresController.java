@@ -38,9 +38,20 @@ public class FornecedoresController {
         String documento = Input.getString("Insira o CNPJ do fornecedor:");
         String email = Input.getString("Insira o e-mail do fornecedor:");
 
-        var fornecedor = new Fornecedor(endereco, telefone, nome, nomeFantasia, documento, email);
+        int novoId = fornecedoresRepository.getHighestId() + 1;
 
-        fornecedoresRepository.createFornecedor(fornecedor);
+
+
+
+        fornecedoresRepository.createFornecedor(new Fornecedor(
+                novoId,
+                endereco,
+                telefone,
+                nome,
+                nomeFantasia,
+                documento,
+                email
+        ));
     }
 
     public void updateFornecedor() {
@@ -49,22 +60,50 @@ public class FornecedoresController {
         var fornecedores = fornecedoresRepository.getAllFornecedores();
 
         if (fornecedores.isEmpty()) {
-            System.out.println("Erro: nenhum fornecedor encontrado! Para atualizar um fornecedor, crie um primeiro.");
+            System.out.println("Erro: nenhum fornecedor encontrado!");
             return;
         }
 
         int id = getIdFornecedorDaLista(fornecedores, "Insira o ID do fornecedor a atualizar:");
 
-        String nome = Input.getString("Insira o novo nome do fornecedor:");
-        String nomeFantasia = Input.getString("Insira o novo nome fantasia do fornecedor:");
-        String endereco = Input.getString("Insira o novo endereço do fornecedor:");
-        String telefone = Input.getString("Insira o novo telefone do fornecedor:");
-        String documento = Input.getString("Insira o novo CNPJ do fornecedor:");
-        String email = Input.getString("Insira o novo e-mail do fornecedor:");
+        Fornecedor original = fornecedores.stream()
+                .filter(f -> f.getId() == id)
+                .findFirst()
+                .orElse(null);
 
-        var fornecedor = new Fornecedor(id, endereco, telefone, nome, nomeFantasia, documento, email);
+        if (original == null) return;
 
-        fornecedoresRepository.updateFornecedor(fornecedor);
+        System.out.println("Pressione ENTER para manter o valor atual mostrado entre (parênteses).");
+
+        String inputNome = Input.getString("Nome (" + original.getNome() + "):");
+        String nomeFinal = inputNome.isEmpty() ? original.getNome() : inputNome;
+
+        String inputFantasia = Input.getString("Nome Fantasia (" + original.getNomeFantasia() + "):");
+        String fantasiaFinal = inputFantasia.isEmpty() ? original.getNomeFantasia() : inputFantasia;
+
+        String inputEndereco = Input.getString("Endereço (" + original.getEndereco() + "):");
+        String enderecoFinal = inputEndereco.isEmpty() ? original.getEndereco() : inputEndereco;
+
+        String inputTelefone = Input.getString("Telefone (" + original.getTelefone() + "):");
+        String telefoneFinal = inputTelefone.isEmpty() ? original.getTelefone() : inputTelefone;
+
+        String inputDoc = Input.getString("CNPJ (" + original.getDocumento() + "):");
+        String docFinal = inputDoc.isEmpty() ? original.getDocumento() : inputDoc;
+
+        String inputEmail = Input.getString("Email (" + original.getEmail() + "):");
+        String emailFinal = inputEmail.isEmpty() ? original.getEmail() : inputEmail;
+
+        var fornecedorAtualizado = new Fornecedor(
+                id,
+                enderecoFinal,
+                telefoneFinal,
+                nomeFinal,
+                fantasiaFinal,
+                docFinal,
+                emailFinal
+        );
+
+        fornecedoresRepository.updateFornecedor(fornecedorAtualizado);
     }
 
     public void deleteFornecedor() {

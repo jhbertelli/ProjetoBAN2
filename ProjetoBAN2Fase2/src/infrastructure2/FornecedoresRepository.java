@@ -4,11 +4,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 import domain2.Categoria;
 import domain2.Fornecedor;
 import org.bson.conversions.Bson;
 
-import java.sql.*;
 import java.util.ArrayList;
 
 public class FornecedoresRepository {
@@ -35,7 +35,18 @@ public class FornecedoresRepository {
 
     public void updateFornecedor(Fornecedor fornecedor) {
         Bson filter = Filters.eq("_id", fornecedor.getId());
-        fornecedoresCollection.replaceOne(filter, fornecedor);
+
+        Bson updates = Updates.combine(
+                Updates.set("nome", fornecedor.getNome()),
+                Updates.set("endereco", fornecedor.getEndereco()),
+                Updates.set("telefone", fornecedor.getTelefone()),
+                Updates.set("email", fornecedor.getEmail()),
+                Updates.set("documento", fornecedor.getDocumento()),
+                Updates.set("nomeFantasia", fornecedor.getNomeFantasia())
+        );
+
+        fornecedoresCollection.updateOne(filter, updates);
+//        fornecedoresCollection.replaceOne(filter, fornecedor);
 //        PreparedStatement st = connection.prepareStatement(
 //            "UPDATE fornecedores SET endereco=?, telefone=?, nome=?, nome_fantasia=?, documento=?, email_contato=? WHERE id_fornecedor=?"
 //        );

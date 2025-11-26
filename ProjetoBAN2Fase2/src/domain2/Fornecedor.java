@@ -1,13 +1,16 @@
 package domain2;
 
 public class Fornecedor {
-    private final int id;
+    private int id;
     private String nome;
     private String endereco;
     private String telefone;
     private String emailContato;
     private String documento;
     private String nomeFantasia;
+
+    public Fornecedor(){
+    }
 
     public Fornecedor(String endereco, String telefone, String nome, String nomeFantasia, String documento, String emailContato ) {
         this(0, endereco, telefone, nome, nomeFantasia, documento, emailContato);
@@ -28,8 +31,13 @@ public class Fornecedor {
         this.nome = nome;
     }
 
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id =id;
     }
 
     public String getNome() {
@@ -68,15 +76,14 @@ public class Fornecedor {
         return nomeFantasia;
     }
 
-    public void setNomeFantasia() {
+    public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
     }
-
     public String getDocumento() {
         return documento;
     }
 
-    public void setDocumento() {
+    public void setDocumento(String documento) {
         this.documento = documento;
     }
 
