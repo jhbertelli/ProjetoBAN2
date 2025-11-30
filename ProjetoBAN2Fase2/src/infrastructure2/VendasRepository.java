@@ -2,15 +2,12 @@ package infrastructure2;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import domain2.Produto;
 import domain2.Venda;
-import domain2.Vendedor;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import org.bson.conversions.Bson;
 import java.util.ArrayList;
-import java.util.logging.Filter;
 
 public class VendasRepository {
     private final MongoCollection<Venda> vendasCollection;
@@ -37,14 +34,14 @@ public class VendasRepository {
         return vendasCollection.find().into(new ArrayList<>());
     }
 
-    public int getProximoIdVenda() {
+    public int getHighestId() {
         Venda ultima = vendasCollection
                 .find()
                 .sort(Sorts.descending("_id"))
                 .limit(1)
                 .first();
 
-        return ultima == null ? 0 : ultima.getId();
+        return ultima == null ? 0 : ultima.getId() + 1;
     }
 
     public ArrayList<Venda> getRelatorioVendas(int id) {

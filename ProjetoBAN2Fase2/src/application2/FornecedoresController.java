@@ -115,7 +115,12 @@ public class FornecedoresController {
 
         int id = getIdFornecedorDaLista(fornecedores, "Insira o ID do fornecedor a excluir:");
 
-        fornecedoresRepository.deleteFornecedor(id);
+        try {
+            fornecedoresRepository.deleteFornecedor(id);
+            System.out.println("Fonecedor deletado com sucesso!");
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static int getIdFornecedorDaLista(ArrayList<Fornecedor> fornecedores, String mensagemInput) {

@@ -237,7 +237,12 @@ public class ProdutosController {
 
         int id = getIdProdutoDaLista(produtos, "Insira o ID do produto a excluir:");
 
-        produtosRepository.deleteProduto(id);
+        try {
+            produtosRepository.deleteProduto(id);
+            System.out.println("Produto excluído com sucesso.");
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static int getIdProdutoDaLista(ArrayList<Produto> produtos, String mensagemInput) {

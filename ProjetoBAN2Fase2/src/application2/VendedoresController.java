@@ -94,7 +94,13 @@ public class VendedoresController {
 
         int id = getIdVendedorDaLista(vendedores, "Insira o ID do vendedor a excluir:");
 
-        vendedoresRepository.deleteVendedor(id);
+        try {
+            vendedoresRepository.deleteVendedor(id);
+            System.out.println("Vendedor excluído com sucesso.");
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private static int getIdVendedorDaLista(ArrayList<Vendedor> vendedores, String mensagemInput) {

@@ -69,7 +69,12 @@ public class CategoriasController {
 
         int id = getIdCategoriaDaLista(categorias, "Insira o ID da categoria a excluir:");
 
-        categoriasRepository.deleteCategoria(id);
+        try {
+            categoriasRepository.deleteCategoria(id);
+            System.out.println("Categoria deletada com sucesso!");
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static int getIdCategoriaDaLista(ArrayList<Categoria> categorias, String mensagemInput) {
