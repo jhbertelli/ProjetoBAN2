@@ -41,7 +41,7 @@ public class VendasRepository {
                 .limit(1)
                 .first();
 
-        return ultima == null ? 0 : ultima.getId() + 1;
+        return ultima == null ? 0 : ultima.getId();
     }
 
     public ArrayList<Venda> getRelatorioVendas(int id) {

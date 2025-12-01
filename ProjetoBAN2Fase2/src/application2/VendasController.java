@@ -50,7 +50,7 @@ public class VendasController {
 
         Vendedor vendedor = findVendedorFromLista(vendedores);
 
-        int proximoIdVenda = vendasRepository.getHighestId();
+        int proximoIdVenda = vendasRepository.getHighestId() + 1;
 
         var venda = criarVenda(proximoIdVenda, vendedor, produtos);
 
