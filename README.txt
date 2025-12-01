@@ -21,7 +21,6 @@ Para a execução do projeto é necessário abrir a pasta 'ProjetoBAN2Fase2' com
 Dentro do IntelliJ, com o projeto aberto: File > Project Structure > Project Settings > Libraries > Add > Selecionar o driver .jar do MongoDB.
 
 link para download do driver: https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver/3.12.11 (em files só clicar onde está escrito 'jar').
-*também foi anexado o .jar no moodle, caso necessário.
 
 
 ****************
